@@ -1,0 +1,38 @@
+tennats
+    life_status = working, student, or normal na tao
+    marital_status = married, single
+    phone_number
+    gender = male or female
+    permanent address
+    budget
+
+rental_building
+    room_size = 
+    building_image = 
+    air_condition = boolean
+    comfort_room = boolea
+    internet = boolen
+    electric = 
+    location = 
+    lat = 
+    long = 
+
+reports
+    building
+    reporter 
+    content
+    address
+    date_reported
+    report status = resolve or not
+
+active rent 
+    room
+    renter 
+    due_date
+    amount
+
+dute date notifcation
+    renter
+    sender
+    content 
+    date

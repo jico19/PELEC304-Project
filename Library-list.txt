@@ -1,0 +1,14 @@
+lib in react
+mapbox for maps
+axios for http request
+daisy ui
+tailwind
+redux
+react-forms
+
+backend libs
+logger for error logging
+allauth for authentication
+django-restframework
+django-cors-headers
+django-all-auth for authication

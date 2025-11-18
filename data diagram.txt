@@ -1,0 +1,86 @@
+–––
+LEVEL-0 / CONTEXT-LEVEL FLOW
+User ↔ Frontend ↔ Backend API ↔ Database
+(Just to anchor everything.)
+
+–––
+LEVEL-1 DETAILED FLOW
+I’ll describe it sequentially so you can sketch it properly.
+
+1. User Login
+User → enters credentials → Frontend → sends to /api/token/
+Backend → verifies credentials → pulls user record from DB → returns JWT → Frontend stores token (localStorage)
+
+2. Display Home Page (Properties Listing)
+Frontend → sends GET /rooms/ to Backend → Backend queries room + building tables → returns list
+Frontend renders property cards.
+
+3. View Property Details
+User clicks a room → Frontend sends GET /rooms/<room_id>/
+Backend → pulls room info, building info, availability → sends back
+Frontend displays details (images, features, price, location map)
+
+4. Rent a Room
+User clicks RENT button → Frontend sends POST /rooms/<room_id>/rent/ with JWT
+Backend →
+• auth via JWT → get tenant_id
+• validate availability
+• create row in active_rentals table
+• set due_date, amount
+• return rental info
+Frontend → redirect to “My Rentals”
+
+5. Monthly Due Date Notifications
+System (cron/scheduler) → checks active_rentals table daily
+If due_date is near → insert row in notifications table
+Frontend → fetches GET /notifications/
+User sees reminders
+
+6. Reports (Maintenance Issues)
+User → clicks “Report Issue” → Frontend sends POST /reports/
+Backend →
+• link report to room or building
+• store reporter_id
+• save content, status (unresolved)
+Admins → fetch reports GET /reports/?status=unresolved
+Admins update a report PATCH /reports/<id>/resolve/
+Backend sets status → resolved
+
+7. Admin Management
+Admin → creates buildings → /buildings/
+Admin → creates rooms under building → /rooms/
+
+–––
+
+USER
+ ├─> Login → Frontend → /api/token/ → Backend
+ │           │
+ │           └─> DB: verify user → JWT returned → stored in Frontend
+ │
+ ├─> View Home (Properties)
+ │           Frontend GET /rooms/ → Backend queries room & building tables → returns list → Frontend renders cards
+ │
+ ├─> View Property Details
+ │           Frontend GET /rooms/<room_id>/ → Backend pulls room+building+availability → returns info → Frontend displays
+ │
+ ├─> Rent Room
+ │           Frontend POST /rooms/<room_id>/rent/ with JWT → Backend
+ │               ├─ authenticate JWT → get tenant_id
+ │               ├─ check availability
+ │               ├─ create row in active_rentals (due_date, amount)
+ │               └─ return rental info → Frontend redirects to “My Rentals”
+ │
+ ├─> Notifications
+ │           System scheduler → check active_rentals → due soon? → insert row in notifications
+ │           Frontend GET /notifications/ → show reminders
+ │
+ ├─> Report Maintenance Issue
+ │           Frontend POST /reports/ → Backend
+ │               ├─ link report to room/building
+ │               ├─ store reporter_id
+ │               ├─ save content & status
+ │           Admins GET /reports/?status=unresolved → PATCH /reports/<id>/resolve/ → status updated
+ │
+ └─> Admin Management
+             ├─ POST /buildings/ → create building
+             └─ POST /rooms/ → create room under building
