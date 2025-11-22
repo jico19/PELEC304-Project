@@ -45,7 +45,7 @@ const Register = () => {
         Sign in or create an account to get started.
       </p>
 
-      <div className="bg-white shadow-md flex items-center p-2 rounded-lg w-2/8 mb-8">
+      <div className="bg-white shadow-md flex items-center p-2 rounded-lg w-4/5 md:w-2/8 mb-8">
         <div className="w-full h-full bg-gray-200 p-1 flex justify-between  text-white font-semibold">
           <Link to="/" className="w-1/2 hover:bg-white text-black text-center">
             Sign In
@@ -58,7 +58,7 @@ const Register = () => {
 
       <form
         onSubmit={handleSubmit(formSubmit)}
-        className="bg-white shadow-md flex flex-col items-center gap-3 p-8 rounded-lg w-2/8"
+        className="bg-white shadow-md flex flex-col items-center gap-3 p-8 rounded-lg w-4/5 md:w-2/8"
       >
         <div className="w-full mb-5">
           <h1 className="font-bold text-2xl mb-2">Create Account</h1>

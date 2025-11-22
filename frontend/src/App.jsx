@@ -12,9 +12,10 @@ function App() {
     <div className='w-full h-screen flex justify-center items-center bg-gray-100 text-black'>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />}/>
+          <Route path="/login" element={<Login />}/>
           <Route path="/signup" element={<Register />}/>
-          <Route path='/home' element={
+          <Route path="/" element={<Home />}/>
+          <Route path='/main' element={
             <ProtectedRoutes>
               <Home/>
             </ProtectedRoutes>
