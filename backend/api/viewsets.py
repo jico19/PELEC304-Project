@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 
 class CustomUserViewSets(viewsets.ModelViewSet):
     '''
-        View sets for user
+        Responsible for registration
     '''
     queryset = models.CustomUser.objects.all()
     serializer_class = serializers.UserSerializers
