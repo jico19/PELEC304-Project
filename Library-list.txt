@@ -4,7 +4,8 @@ axios for http request
 daisy ui
 tailwind
 redux
-react-forms
+react-hook-forms
+react-hot-toast
 
 backend libs
 logger for error logging

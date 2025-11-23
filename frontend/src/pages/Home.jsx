@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import api from "src/utils/api"
 import Maps from "src/components/Maps"
+import NavBar from "src/components/NavBar"
 
 // "Incorrect type. Expected pk value, received str."
 
@@ -35,16 +36,17 @@ const Home = () => {
 
 
     return (
-        <div>
-            <h1>This is Home!</h1>
+        <div className="w-full h-screen flex flex-col">
+            <NavBar />
+            {/* <h1>This is Home!</h1>
             <h1>!!notes!! dapat andito yung maps tas parang cards nung mga Avaiable na rental homes</h1>
 
             <section>
                 <Maps />
-            </section>
+            </section> */}
 
             {/* dapat card yung mga rentals */}
-            {rentals.map((rental, index) => (
+            {/* {rentals.map((rental, index) => (
                 <div key={rental.room_id}>
                     <img src={rental.room_picture} alt={rental.name} />
                     <h1>Room name: {rental.name}</h1>
@@ -57,18 +59,18 @@ const Home = () => {
                     <button onClick={() => RentNowHandler(index)}>rent now</button>
                     <button>detail view</button>
                 </div>
-            ))}
+            ))} */}
 
-            {/* 
-                sa detail view pweding gumamit ka ng modal to dispaly the information nung room
-                like sa card kunti lang pakita mo like yung name tas price lang tas lagay ka nalang ng detailview
-                tas dun mo lagay kung air conditioned ba o hindi yung mga ganun
-                naacess isya through slug name
-                api/room/slug_name/
-            */}
 
         </div>
     )
 }
 
 export default Home
+{/* 
+    sa detail view pweding gumamit ka ng modal to dispaly the information nung room
+    like sa card kunti lang pakita mo like yung name tas price lang tas lagay ka nalang ng detailview
+    tas dun mo lagay kung air conditioned ba o hindi yung mga ganun
+    naacess isya through slug name
+    api/room/slug_name/
+*/}
