@@ -45,7 +45,8 @@ class CustomUser(AbstractUser):
                 regex=r'^(09\d{9}|\+639\d{9})$',
                 message="Enter a valid PH mobile number (09XXXXXXXXX or +639XXXXXXXXX)."
             )
-        ]
+        ],
+        blank=True
     )
     marital_status = models.CharField(max_length=20, choices=MARITAL_STATUS_CHOICES, default="Single")
     gender = models.CharField(max_length=20, choices=GENDER_CHOICES, default="Others")

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../utils/Api";
-
+import GoogleLoginTest from "src/components/GoogleLogin";
 const Login = () => {
   const {
     register,
@@ -16,23 +16,24 @@ const Login = () => {
   const navigate = useNavigate();
 
   const formSubmit = async (data) => {
-    // console.log(data)
-    // try {
-    //   const response = await api.post('token/', data)
-    //   localStorage.setItem('access_token', response.data.access)
-    //   localStorage.setItem('refresh_token', response.data.refresh)
-    //   toast.success('Login Successfully.')
-    //   setTimeout(()=>{
-    //     navigate('/main')
-    //   },1000)
-    // } catch (error) {
-    //   console.log(error)
-    // }
+    console.log(data)
+    try {
+      const response = await api.post('token/', data)
+      localStorage.setItem('access_token', response.data.access)
+      localStorage.setItem('refresh_token', response.data.refresh)
+      toast.success('Login Successfully.')
+      setTimeout(()=>{
+        navigate('/home')
+      },1000)
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center">
       <h1 className="font-bold text-3xl mb-2">Welcome to LCBNB</h1>
+      <GoogleLoginTest/>
       <p className="text-gray-500 mb-8">
         Sign in or create an account to get started.
       </p>
