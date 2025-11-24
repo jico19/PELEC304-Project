@@ -1,9 +1,17 @@
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework import generics, views, status
+from rest_framework import generics, views, status, response
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from google.oauth2 import id_token
+from google.auth.transport import requests
+#
 from rest_framework.response import Response
 from . import models
 from . import serializers
 from .utils import filter_by_budget_room
+
+User = get_user_model()
+
 
 class LogoutView(views.APIView):
     def post(self, request):
@@ -56,3 +64,52 @@ class RoomBudgetFilter(views.APIView):
             "message": "dsadasdsd",
             "data": serializer.data
         })
+
+class GoogleLoginView(views.APIView):
+    permission_classes = []
+
+    def post(self, request):
+        token = request.data.get('token') # google sent id token 
+        
+        if not token:
+            return Response({"error": "ID Token Missing."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            idinfo = id_token.verify_oauth2_token(
+                token,
+                requests.Request(),
+                settings.GOOGLE_CLIENT_ID
+            )
+            # Extract fields
+            email = idinfo.get("email")
+            sub = idinfo.get("sub")            # Google user ID
+            name = idinfo.get("name")
+            picture = idinfo.get("picture")
+            
+            if not email:
+                return Response({"error": "Email not provided by Google"}, status=400)
+            
+            # will created default user information
+            user, created = User.objects.get_or_create(
+                email=email,
+                defaults={
+                    "username": email.split("@")[0],
+                    "first_name": name or "",
+                }
+            )
+            
+            refresh = RefreshToken.for_user(user)
+            
+            return Response({
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+                "user": {
+                    "id": user.id,
+                    "email": user.email,
+                    "name": user.first_name,
+                    "avatar": picture,
+                }
+            })
+
+        except ValueError:
+            return Response({"error": "Invalid ID token"}, status=400)

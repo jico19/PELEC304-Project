@@ -29,16 +29,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites', 
     
-    # third party apps
+    # rest framework    
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
+    # all auth
     'allauth',
     'allauth.account',
     'allauth.socialaccount',   
     'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.facebook',
+    # extra
     'apscheduler',
     'django_extensions',
     
@@ -114,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Manila'
 
 USE_I18N = True
 
@@ -158,8 +159,6 @@ SIMPLE_JWT = {
     "UPDATE_LAST_LOGIN": False,
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
-
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
@@ -169,3 +168,10 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 AUTH_USER_MODEL = 'api.CustomUser'
+
+# OAuth Config
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',
+]   
+
+GOOGLE_CLIENT_ID = os.environ.get('CLIENT_ID')
