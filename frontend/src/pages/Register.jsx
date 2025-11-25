@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import api from "../utils/api";
+import api from "../utils/Api";
 
 const Register = () => {
   const {
@@ -14,7 +14,7 @@ const Register = () => {
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
-        'role': 'tenant',
+        'role': false,
         'username': '',
         'password': ''
     }
@@ -24,18 +24,18 @@ const Register = () => {
   const selectedRole = watch("role");
 
   const formSubmit = async (data) => {
-    // console.log(data)
-    // try {
-    //   const response = await api.post('token/', data)
-    //   localStorage.setItem('access_token', response.data.access)
-    //   localStorage.setItem('refresh_token', response.data.refresh)
-    //   toast.success('Login Successfully.')
-    //   setTimeout(()=>{
-    //     navigate('/main')
-    //   },1000)
-    // } catch (error) {
-    //   console.log(error)
-    // }
+    console.log(data)
+    try {
+      const response = await api.post('user/', data)
+      localStorage.setItem('access_token', response.data.access)
+      localStorage.setItem('refresh_token', response.data.refresh)
+      toast.success('Login Successfully.')
+      setTimeout(()=>{
+        navigate('/home')
+      },1000)
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
@@ -70,31 +70,18 @@ const Register = () => {
         <div className="w-full flex justify-between gap-2 mb-4">
           <label
             className={`relative flex flex-col items-center justify-center p-6 rounded-lg cursor-pointer transition-all border-2 w-1/2 ${
-              selectedRole === "tenant"
+              selectedRole === false
                 ? "border-black bg-gray-100"
                 : "border-gray-200 hover:border-gray-400"
             }`}
           >
             <input
               type="radio"
-              value="tenant"
+              value={false}
               {...register("role")}
               className="absolute opacity-0"
             />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              className="size-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-              />
-            </svg>
+            <img src="https://img.icons8.com/?size=100&id=12438&format=png&color=000000" alt="User" className="w-6 h-6" />
 
             <div className="font-bold">Tenant</div>
             <div className="text-sm text-gray-500">Looking for a place</div>
@@ -102,14 +89,14 @@ const Register = () => {
 
           <label
             className={`relative flex flex-col items-center justify-center p-6 rounded-lg cursor-pointer transition-all border-2 w-1/2  ${
-              selectedRole === "landlord"
+              selectedRole === true
                 ? "border-black bg-gray-100"
                 : "border-gray-200 hover:border-gray-400"
             }`}
           >
             <input
               type="radio"
-              value="landlord"
+              value={true}  
               {...register("role")}
               className="absolute opacity-0"
             />
