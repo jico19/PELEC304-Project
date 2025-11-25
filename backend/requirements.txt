@@ -1,5 +1,6 @@
 APScheduler==3.11.1
 asgiref==3.10.0
+cachetools==6.2.2
 certifi==2025.11.12
 cffi==2.0.0
 charset-normalizer==3.4.4
@@ -11,16 +12,20 @@ django-extensions==4.1
 django-restframework==0.0.1
 djangorestframework==3.16.1
 djangorestframework_simplejwt==5.5.1
+google-auth==2.43.0
 idna==3.11
 logger==1.4
 numpy==2.3.5
 pandas==2.3.3
 pillow==12.0.0
+pyasn1==0.6.1
+pyasn1_modules==0.4.2
 pycparser==2.23
 PyJWT==2.10.1
 python-dateutil==2.9.0.post0
 pytz==2025.2
 requests==2.32.5
+rsa==4.9.1
 shortuuid==1.0.13
 six==1.17.0
 sqlparse==0.5.3
