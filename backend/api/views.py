@@ -32,7 +32,7 @@ class LogoutView(views.APIView):
 class RoomBudgetFilter(views.APIView):
     
     '''
-        http://127.0.0.1:8000/api/test/?lat=13.9456619&lon=121.6248902&radius=5&min-budget=2500&max-budget=3000
+        http://127.0.0.1:8000/api/rooms/?lat=13.9456619&lon=121.6248902&radius=5&min-budget=2500&max-budget=3000
         
     '''
     

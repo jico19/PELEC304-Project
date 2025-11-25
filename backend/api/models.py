@@ -29,6 +29,12 @@ class CustomUser(AbstractUser):
         ('Others','Others'), 
     )
     
+    USER_ROLE_CHOICES = (
+        ('Landlord', 'Landlord'),
+        ('Tenant', 'Tenant'),
+    )
+
+
     '''
         ROLE NOTES:
         True it means landlord
@@ -51,7 +57,7 @@ class CustomUser(AbstractUser):
     marital_status = models.CharField(max_length=20, choices=MARITAL_STATUS_CHOICES, default="Single")
     gender = models.CharField(max_length=20, choices=GENDER_CHOICES, default="Others")
     permanent_address = models.CharField(max_length=300, default="")
-    role = models.BooleanField(default=False)
+    role = models.CharField(max_length=20, choices=USER_ROLE_CHOICES, default="Tenant")
     budget = models.IntegerField(default=randint(1000,20000))
     
     def __str__(self):
