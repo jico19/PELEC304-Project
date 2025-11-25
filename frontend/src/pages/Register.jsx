@@ -14,27 +14,27 @@ const Register = () => {
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
-        'role': false,
-        'username': '',
-        'password': ''
-    }
+      role: "Tenant",
+      username: "",
+      password: "",
+    },
   });
 
   const navigate = useNavigate();
   const selectedRole = watch("role");
 
   const formSubmit = async (data) => {
-    console.log(data)
+    console.log(data);
     try {
-      const response = await api.post('user/', data)
-      localStorage.setItem('access_token', response.data.access)
-      localStorage.setItem('refresh_token', response.data.refresh)
-      toast.success('Login Successfully.')
-      setTimeout(()=>{
-        navigate('/home')
-      },1000)
+      const response = await api.post("user/", data);
+      localStorage.setItem("access_token", response.data.access);
+      localStorage.setItem("refresh_token", response.data.refresh);
+      toast.success("Login Successfully.");
+      setTimeout(() => {
+        navigate("/home");
+      }, 1000);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -70,18 +70,22 @@ const Register = () => {
         <div className="w-full flex justify-between gap-2 mb-4">
           <label
             className={`relative flex flex-col items-center justify-center p-6 rounded-lg cursor-pointer transition-all border-2 w-1/2 ${
-              selectedRole === false
+              selectedRole === "Tenant"
                 ? "border-black bg-gray-100"
                 : "border-gray-200 hover:border-gray-400"
             }`}
           >
             <input
               type="radio"
-              value={false}
+              value="Tenant"
               {...register("role")}
               className="absolute opacity-0"
             />
-            <img src="https://img.icons8.com/?size=100&id=12438&format=png&color=000000" alt="User" className="w-6 h-6" />
+            <img
+              src="https://img.icons8.com/?size=100&id=12438&format=png&color=000000"
+              alt="User"
+              className="w-6 h-6"
+            />
 
             <div className="font-bold">Tenant</div>
             <div className="text-sm text-gray-500">Looking for a place</div>
@@ -89,31 +93,22 @@ const Register = () => {
 
           <label
             className={`relative flex flex-col items-center justify-center p-6 rounded-lg cursor-pointer transition-all border-2 w-1/2  ${
-              selectedRole === true
+              selectedRole === "Landlord"
                 ? "border-black bg-gray-100"
                 : "border-gray-200 hover:border-gray-400"
             }`}
           >
             <input
               type="radio"
-              value={true}  
+              value="Landlord"
               {...register("role")}
               className="absolute opacity-0"
             />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              className="size-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
-              />
-            </svg>
+            <img
+              src="https://img.icons8.com/?size=100&id=73&format=png&color=000000"
+              alt="User"
+              className="w-6 h-6"
+            />
 
             <div className="font-bold">Landlord</div>
             <div className="text-sm text-gray-500">Have property to rent</div>
@@ -151,7 +146,6 @@ const Register = () => {
             }`}
           />
         </div>
-        
 
         <button
           className="btn text-xl w-full hover:scale-95 transition-all cursor-pointer py-6 mt-2"
