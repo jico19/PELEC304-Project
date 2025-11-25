@@ -3,6 +3,8 @@ import Register from './pages/Register'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import ProtectedRoutes from './utils/ProtectedRoutes'
 import Home from './pages/Home'
+import LiveMapView from './pages/LiveMapPage'
+
 import 'leaflet/dist/leaflet.css';
 
 
@@ -12,14 +14,20 @@ function App() {
     <div className='w-full h-screen flex justify-center items-center bg-gray-100 text-black'>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />}/>
-          <Route path="/signup" element={<Register />}/>
+          <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<Register />} />
           <Route path='/home' element={
             <ProtectedRoutes>
-              <Home/>
+              <Home />
             </ProtectedRoutes>
-          }/>
+          } />
+          <Route path='/live-map' element={
+            <ProtectedRoutes>
+              <LiveMapView />
+            </ProtectedRoutes>
+          } />
         </Routes>
+
       </BrowserRouter>
     </div>
   )

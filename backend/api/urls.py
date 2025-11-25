@@ -15,7 +15,8 @@ urlpatterns = [
     path('logout/', views.LogoutView.as_view(), name="logout_view"),
     
     # endpoints with query params
-    path('rooms/', views.RoomBudgetFilter.as_view(), name="test"),
+    path('rooms/', views.RoomBudgetFilter.as_view(), name="rooms"),
+    path('room/locations/', views.RoomsLocations.as_view(), name="room_locations"),
     
     # user endpoints
     path('', include(router.urls))

@@ -1,6 +1,25 @@
-import React from "react";
-
+import { useNavigate } from "react-router-dom";
+import api from "src/utils/Api";
 const NavBar = () => {
+  const navigate = useNavigate()
+
+  const LogoutHandler = async () => {
+    // this function handles the log out.
+    try {
+      const res = await api.post('logout/', {
+        "refresh_token": localStorage.getItem('refresh_token')
+      })
+      localStorage.removeItem('access_token')
+      localStorage.removeItem('profile_pic')
+      localStorage.removeItem('refresh_token')
+      navigate('/') // <- redirect to login once logout
+      console.log("you have been logout.")
+      console.log(res.data)
+    } catch (error) {
+      console.log(error.data)
+    }
+  }
+
   return (
     <div>
       <div className="navbar bg-white shadow-sm">
@@ -37,15 +56,24 @@ const NavBar = () => {
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1 bg-red-400 flex gap-2">
-            <li>Home</li>
+            <button onClick={() => navigate('/home')}>Home</button>
             <li>About</li>
             <li>Recommendation</li>
-            <li>Live Map</li>
+            <button onClick={() => navigate('/live-map')}>Live Map</button>
             <li>Contact</li>
           </ul>
         </div>
         <div className="navbar-end">
-          <a className="btn btn-outline hover:btn-soft mr-4">Sign In</a>
+          {localStorage.getItem('access_token') ? (
+            <button
+              className="btn btn-outline hover:btn-soft mr-4"
+              onClick={LogoutHandler}
+            >
+              Logout
+            </button>
+          ) : (
+            <button className="btn btn-outline hover:btn-soft mr-4">Sign In</button>
+          )}
         </div>
       </div>
     </div>

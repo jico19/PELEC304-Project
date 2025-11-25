@@ -18,11 +18,11 @@ def run():
 
     
     for row in df.itertuples():
-        with open('./images/sample.jpg', 'rb') as f:
+        with open('./images/O_block.jpg', 'rb') as f:
             img_bytes = f.read()
         
         img_file = SimpleUploadedFile(
-            name='sample.jpg',
+            name='O_block.jpg',
             content=img_bytes,
             content_type='image/jpeg'
         )
