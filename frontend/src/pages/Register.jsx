@@ -30,9 +30,9 @@ const Register = () => {
       localStorage.setItem("access_token", response.data.access);
       localStorage.setItem("refresh_token", response.data.refresh);
       toast.success("Login Successfully.");
-      setTimeout(() => {
-        navigate("/home");
-      }, 1000);
+      // setTimeout(() => {
+      //   navigate("/home");
+      // }, 1000);
     } catch (error) {
       console.log(error);
     }
@@ -40,6 +40,12 @@ const Register = () => {
 
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center">
+      <button
+        onClick={() => navigate("/")}
+        className="btn absolute top-10 right-20 hover:bg-white hover:text-black"
+      >
+        Back to Home >
+      </button>
       <h1 className="font-bold text-3xl mb-2">Welcome to LCBNB</h1>
       <p className="text-gray-500 mb-8">
         Sign in or create an account to get started.
@@ -47,7 +53,7 @@ const Register = () => {
 
       <div className="bg-white shadow-md flex items-center p-2 rounded-lg w-4/5 md:w-2/8 mb-8">
         <div className="w-full h-full bg-gray-200 p-1 flex justify-between  text-white font-semibold">
-          <Link to="/" className="w-1/2 hover:bg-white text-black text-center">
+          <Link to="/login" className="w-1/2 hover:bg-white text-black text-center">
             Sign In
           </Link>
           <button className="w-1/2 bg-white text-black text-center cursor-pointer">
@@ -121,7 +127,7 @@ const Register = () => {
             type="text"
             {...register("username", { required: "Username is required." })}
             placeholder={`${
-              errors.username ? errors.username?.message : "Username"
+              errors.username ? errors.username?.message : "Enter your username"
             }`}
             className={`w-full bg-gray-100 px-5 py-3 rounded-md border shadow-md focus:outline-none focus:scale-95 transition-all ${
               errors.username
@@ -137,7 +143,7 @@ const Register = () => {
             type="password"
             {...register("password", { required: "Password is required." })}
             placeholder={`${
-              errors.password ? errors.password?.message : "Password"
+              errors.password ? errors.password?.message : "Enter your password"
             }`}
             className={`w-full bg-gray-100 px-5 py-3 rounded-lg border  shadow-md focus:outline-none focus:scale-95 transition-all ${
               errors.password
