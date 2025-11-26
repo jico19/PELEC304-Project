@@ -1,5 +1,6 @@
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import generics, views, status, response
+from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from google.oauth2 import id_token
@@ -9,6 +10,7 @@ from rest_framework.response import Response
 from . import models
 from . import serializers
 from .utils import filter_by_budget_room
+from .models import Room
 
 User = get_user_model()
 
@@ -28,6 +30,14 @@ class LogoutView(views.APIView):
     HOUSE BUDGET,
     Longitude and LAT
 '''
+
+class RoomsLocations(views.APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        data = Room.objects.all().values('room_id', 'name', 'lat', 'long', 'price')
+        
+        return Response({"data": data})
 
 class RoomBudgetFilter(views.APIView):
     
@@ -61,12 +71,10 @@ class RoomBudgetFilter(views.APIView):
         serializer = serializers.RoomSerializer(rooms, many=True)
         
         return Response({
-            "message": "dsadasdsd",
             "data": serializer.data
         })
 
 class GoogleLoginView(views.APIView):
-    permission_classes = []
 
     def post(self, request):
         token = request.data.get('token') # google sent id token 
