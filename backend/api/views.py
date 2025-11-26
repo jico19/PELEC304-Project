@@ -3,6 +3,10 @@ from rest_framework import generics, views, status, response
 from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+
+
 from google.oauth2 import id_token
 from google.auth.transport import requests
 #
@@ -11,6 +15,8 @@ from . import models
 from . import serializers
 from .utils import filter_by_budget_room
 from .models import Room
+
+
 
 User = get_user_model()
 
@@ -30,12 +36,13 @@ class LogoutView(views.APIView):
     HOUSE BUDGET,
     Longitude and LAT
 '''
-
+CACHE_KEY = "all_rooms_v1"
+@method_decorator(cache_page(60, key_prefix='all_rooms'), name="get")
 class RoomsLocations(views.APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     
     def get(self, request):
-        data = Room.objects.all().values('room_id', 'name', 'lat', 'long', 'price')
+        data = Room.objects.filter(room_availability='Available').values('room_id', 'name', 'lat', 'long', 'price', 'room_availability')
         
         return Response({"data": data})
 

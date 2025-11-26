@@ -6,6 +6,7 @@ const PropertyCards = ({
     comfortroom,
     internet,
     price,
+    handler
 }) => {
     return (
         <div className="card w-72 bg-white shadow-lg hover:shadow-xl transition-all duration-200 border border-base-200">
@@ -40,7 +41,7 @@ const PropertyCards = ({
                     <span className="font-semibold text-primary text-base">
                         ₱{price}/mo
                     </span>
-                    <button className="btn btn-primary btn-xs">Rent me</button>
+                    <button className="btn btn-primary btn-xs" onClick={handler}>Rent me</button>
                 </div>
             </div>
         </div>
