@@ -82,15 +82,12 @@ class NotifcationSerializer(serializers.ModelSerializer):
 
 class RentTransactionSerializers(serializers.ModelSerializer):
     
-    '''
-        TODO: LATER VALIDATES IF THE ROOM IS AVAILABLE OR NOT.
-    '''
-    
+        
     room_name = serializers.SerializerMethodField()
     class Meta:
         model = models.RentTransaction
         fields = ['id', 'transact_id', 'room','room_name']
-        read_only_fields = ['id', 'renter']
+        read_only_fields = ['id', 'renter'] 
 
     def get_room_name(self, obj):
         return f"{obj.room.name}"
@@ -102,6 +99,8 @@ class RentTransactionSerializers(serializers.ModelSerializer):
         '''
         renter_budget = self.context['request'].user
         room_price = attrs['room'].price
+        
+        print(renter_budget)
         
         # checks if user can affort the room
         if renter_budget.budget < room_price:

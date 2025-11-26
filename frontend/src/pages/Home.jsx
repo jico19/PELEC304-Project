@@ -21,9 +21,10 @@ const Home = () => {
         caller()
     }, [])
 
-    const RentNowHandler = async (index) => {
+    const RentNowHandler = async (room_id) => {
         try {
-            const res = await api.post('transaction/', { room: rentals[index].id })
+            const res = await api.post('transaction/', { room: room_id })
+            console.log(res.data)
             console.log("Successfuly rented a room!")
         } catch (error) {
             console.log(error.response.data)
@@ -49,6 +50,7 @@ const Home = () => {
                         comfortroom={data.comfort_room}
                         internet={data.internet}
                         price={data.price}
+                        handler={() => RentNowHandler(data.id)}
                     />
                 ))}
             </div>
