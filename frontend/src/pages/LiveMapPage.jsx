@@ -42,10 +42,10 @@ const LiveMapView = () => {
                     {rentals.map((data) => {
                         const markerIcon =
                             data.price <= 3000
-                                ? new L.icon({ iconUrl: green_dot, iconSize: [32,] })
+                                ? new L.icon({ iconUrl: green_dot, iconSize: [32] })
                                 : data.price <= 7000
-                                    ? new L.icon({ iconUrl: yellow_dot, iconSize: [32,] })
-                                    : new L.icon({ iconUrl: red_dot, iconSize: [32,] });
+                                    ? new L.icon({ iconUrl: yellow_dot, iconSize: [32] })
+                                    : new L.icon({ iconUrl: red_dot, iconSize: [32] });
 
                         return (
                             <Marker
