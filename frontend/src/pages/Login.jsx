@@ -32,7 +32,7 @@ const Login = () => {
 
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center">
-      <button onClick={() => navigate('/')} className="btn absolute top-10 right-20 hover:bg-white hover:text-black">Back to Home ></button>
+      <button onClick={() => navigate('/')} className="btn absolute top-10 right-20 hover:bg-white hover:text-black">Back to Home </button>
       <h1 className="font-bold text-3xl mb-2">Welcome to LCBNB</h1>
       <p className="text-gray-500 mb-8">
         Sign in or create an account to get started.
@@ -64,7 +64,7 @@ const Login = () => {
             placeholder={`${
               errors.username ? errors.username?.message : "Enter your username"
             }`}
-            className={`w-full bg-gray-100 px-5 py-3 rounded-md border shadow-md focus:outline-none focus:scale-95 transition-all ${
+            className={`w-full bg-white px-5 py-3 rounded-md border shadow-md focus:outline-none focus:scale-95 transition-all ${
               errors.username
                 ? "border-red-400 text-red-500"
                 : "border-gray-400"
@@ -80,7 +80,7 @@ const Login = () => {
             placeholder={`${
               errors.password ? errors.password?.message : "Enter your password"
             }`}
-            className={`w-full bg-gray-100 px-5 py-3 rounded-lg border shadow-md focus:outline-none focus:scale-95 transition-all ${
+            className={`w-full bg-white px-5 py-3 rounded-lg border shadow-md focus:outline-none focus:scale-95 transition-all ${
               errors.password
                 ? "border-red-400 text-red-500"
                 : "border-gray-400"
@@ -109,7 +109,7 @@ const Login = () => {
           </p>
         )}
 
-        <h1 className="m-2  text-center text-xs font-bold">OR</h1>
+        <h1 className="m-2 text-center text-xs font-bold">OR</h1>
         <GoogleLoginTest/>
       </form>
     </div>
