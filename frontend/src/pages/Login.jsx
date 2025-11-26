@@ -32,13 +32,13 @@ const Login = () => {
 
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center">
+      <button onClick={() => navigate('/')} className="btn absolute top-10 right-20 hover:bg-white hover:text-black">Back to Home ></button>
       <h1 className="font-bold text-3xl mb-2">Welcome to LCBNB</h1>
-      <GoogleLoginTest/>
       <p className="text-gray-500 mb-8">
         Sign in or create an account to get started.
       </p>
 
-      <div className="bg-white shadow-md flex items-center p-2 rounded-lg w-4/5 lg:w-2/8 mb-8">
+      <div className="bg-white shadow-md flex items-center p-2 rounded-lg lg:w-2/8 w-4/5 mb-8">
         <div className="w-full h-full bg-gray-200 p-1 flex justify-between  text-white font-semibold">
           <button className="w-1/2 bg-white text-black text-center cursor-pointer">Sign In</button>
           <Link to='/signup' className="w-1/2 hover:bg-white text-black text-center">Sign Up</Link>
@@ -62,7 +62,7 @@ const Login = () => {
             type="text"
             {...register("username", { required: "Username is required." })}
             placeholder={`${
-              errors.username ? errors.username?.message : "Username"
+              errors.username ? errors.username?.message : "Enter your username"
             }`}
             className={`w-full bg-gray-100 px-5 py-3 rounded-md border shadow-md focus:outline-none focus:scale-95 transition-all ${
               errors.username
@@ -78,9 +78,9 @@ const Login = () => {
             type="password"
             {...register("password", { required: "Password is required." })}
             placeholder={`${
-              errors.password ? errors.password?.message : "Password"
+              errors.password ? errors.password?.message : "Enter your password"
             }`}
-            className={`w-full bg-gray-100 px-5 py-3 rounded-lg border  shadow-md focus:outline-none focus:scale-95 transition-all ${
+            className={`w-full bg-gray-100 px-5 py-3 rounded-lg border shadow-md focus:outline-none focus:scale-95 transition-all ${
               errors.password
                 ? "border-red-400 text-red-500"
                 : "border-gray-400"
@@ -108,6 +108,9 @@ const Login = () => {
             {errors.root?.message}
           </p>
         )}
+
+        <h1 className="m-2  text-center text-xs font-bold">OR</h1>
+        <GoogleLoginTest/>
       </form>
     </div>
   );
