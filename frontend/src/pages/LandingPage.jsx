@@ -1,6 +1,7 @@
 import React from "react";
 import NavBar from "src/components/NavBar";
 import RoomCard from "src/components/RoomCard";
+import Footer from "src/components/Footer";
 
 import HeroImg from "../assets/landingpage/hero_img.png";
 
@@ -71,7 +72,7 @@ const LandingPage = () => {
         <p className="text-sm text-gray-500 mb-10">
           Finding your perfect rental is just three steps away
         </p>
-        <div className="flex flex-row w-3/5 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 w-3/5 gap-10">
           <div className="flex flex-col items-center">
             <div className="w-13 h-13 flex justify-center items-center text-xl font-bold rounded-full border-2 border-gray-300 shadow mb-2">
               1
@@ -89,7 +90,8 @@ const LandingPage = () => {
             </div>
             <h1 className="text-xl font-bold mb-5">Book</h1>
             <p className="text-gray-500 text-center">
-              Contact landlords directly, schedule visits, and secure your rental with confidence.
+              Contact landlords directly, schedule visits, and secure your
+              rental with confidence.
             </p>
           </div>
 
@@ -104,6 +106,20 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
+
+      <section className=" w-full py-30 px-10 flex flex-col items-center text-white bg-gray-700">
+        <h1 className="text-3xl font-bold mb-2">
+          Own a Property in Lucena City?
+        </h1>
+        <p className="text-sm text-gray-300 mb-10">
+          Join LCBNB and connect with thousands of potential tenants. List your
+          property for free and start earning today.
+        </p>
+
+        <button className="btn border-none hover:scale-95 transition-all bg-white text-black text-xl px-10 py-7 rounded-lg">List your Property Now </button>
+      </section>
+
+      <Footer />
     </div>
   );
 };
