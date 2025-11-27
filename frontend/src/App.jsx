@@ -24,12 +24,9 @@ function App() {
             </ProtectedRoutes>
           } />
           <Route path='/live-map' element={
-            <ProtectedRoutes>
               <LiveMapView />
-            </ProtectedRoutes>
           } />
         </Routes>
-
       </BrowserRouter>
     </div>
   )
