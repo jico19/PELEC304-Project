@@ -44,21 +44,29 @@ const NavBar = () => {
             </div>
             <ul
               tabIndex={-1}
-              // className="menu menu-sm dropdown-content bg-white rounded-box z-1 mt-5 w-52 p-2 shadow flex flex-col gap-2">
               className="menu menu-sm dropdown-content  bg-white rounded-box z-1 mt-5 w-52 p-2 shadow "
             >
-              <li className="p-2 hover:bg-black hover:text-white transition-all rounded">
+              <button
+                onClick={() => navigate("/")}
+                className="p-2 text-start hover:bg-black hover:text-white transition-all rounded"
+              >
                 Home
-              </li>
+              </button>
               <li className="p-2 hover:bg-black hover:text-white transition-all rounded">
                 About
               </li>
-              <li className="p-2 hover:bg-black hover:text-white transition-all rounded">
+              <button
+                onClick={() => navigate("/home")}
+                className="p-2 text-start hover:bg-black hover:text-white transition-all rounded"
+              >
                 Recommendation
-              </li>
-              <li className="p-2 hover:bg-black hover:text-white transition-all rounded">
+              </button>
+              <button
+                onClick={() => navigate("/live-map")}
+                className="p-2 text-start hover:bg-black hover:text-white transition-all rounded"
+              >
                 Live Map
-              </li>
+              </button>
               <li className="p-2 hover:bg-black hover:text-white transition-all rounded">
                 Contact
               </li>
@@ -77,9 +85,12 @@ const NavBar = () => {
             <li className="p-2 hover:bg-black hover:text-white transition-all rounded">
               About
             </li>
-            <li className="p-2 hover:bg-black hover:text-white transition-all rounded">
+            <button
+              onClick={() => navigate("/home")}
+              className="p-2 text-start hover:bg-black hover:text-white transition-all rounded"
+            >
               Recommendation
-            </li>
+            </button>
             <button
               onClick={() => navigate("/live-map")}
               className="p-2 hover:bg-black hover:text-white transition-all rounded"
@@ -100,7 +111,10 @@ const NavBar = () => {
               Logout
             </button>
           ) : (
-            <button className="btn  hover:bg-white hover:text-black mr-4 hover:scale-95 transition-all" onClick={() => navigate("/login")}>
+            <button
+              className="btn  hover:bg-white hover:text-black mr-4 hover:scale-95 transition-all"
+              onClick={() => navigate("/login")}
+            >
               Sign In
             </button>
           )}

@@ -99,9 +99,7 @@ class RentTransactionSerializers(serializers.ModelSerializer):
         '''
         renter_budget = self.context['request'].user
         room_price = attrs['room'].price
-        
-        print(renter_budget)
-        
+                
         # checks if user can affort the room
         if renter_budget.budget < room_price:
             raise serializers.ValidationError({

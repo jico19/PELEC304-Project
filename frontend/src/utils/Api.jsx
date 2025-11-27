@@ -16,7 +16,6 @@ api.interceptors.response.use(
     (res) => res,
     async (err) => {
         const origReq = err.config;
-        console.log("it work")
         // Check if access token expired
         if (err.response?.status === 401 && !origReq._retry) {
             origReq._retry = true;
@@ -24,7 +23,7 @@ api.interceptors.response.use(
             const refresh_token = localStorage.getItem("refresh_token");
             try {
                 // Get new access token
-                const res = await api.post("/token/refresh/", {
+                const res = await api.post("token/refresh/", {
                     refresh: refresh_token,
                 });
 
@@ -32,7 +31,7 @@ api.interceptors.response.use(
 
                 // Save new access token
                 localStorage.setItem("access_token", newAccess);
-
+                
                 // Update the request header and retry
                 origReq.headers.Authorization = `Bearer ${newAccess}`;
 
@@ -41,7 +40,7 @@ api.interceptors.response.use(
                 // refresh token also expired → logout
                 console.log(refreshErr)
                 localStorage.clear();
-                window.location.href = "/";
+                // window.location.href = "/";
             }
         }
         return Promise.reject(err);
