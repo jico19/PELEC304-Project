@@ -197,3 +197,11 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification {self.notification_id}"
+
+
+class Favorites(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f"{self.renter.username} - {self.room.name}"

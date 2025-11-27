@@ -5,18 +5,16 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-
-
 from google.oauth2 import id_token
 from google.auth.transport import requests
+from django.core.cache import cache
 #
 from rest_framework.response import Response
 from . import models
 from . import serializers
 from .utils import filter_by_budget_room
 from .models import Room
-
-
+import requests
 
 User = get_user_model()
 
@@ -36,7 +34,7 @@ class LogoutView(views.APIView):
     HOUSE BUDGET,
     Longitude and LAT
 '''
-CACHE_KEY = "all_rooms_v1"
+
 @method_decorator(cache_page(60, key_prefix='all_rooms'), name="get")
 class RoomsLocations(views.APIView):
     # permission_classes = [IsAuthenticated]
@@ -128,3 +126,43 @@ class GoogleLoginView(views.APIView):
 
         except ValueError:
             return Response({"error": "Invalid ID token"}, status=400)
+        
+        
+
+class GeoCoding(views.APIView):
+    serializer_class = serializers.SearchRoomSerializers
+
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        address = serializer.validated_data["address"]
+        
+        endpoint = (
+            "https://api.geoapify.com/v1/geocode/search"
+            f"?text={address}"
+            "&filter=countrycode:ph"
+            "&bias=countrycode:ph"
+            f"&apiKey={settings.GEOAPI_KEY}"
+        )
+
+        cache_key = f"geo:{address}"
+        cached_data = cache.get(cache_key)
+
+        if cached_data:
+            return Response({
+                "status": "cached",
+                "geo_data": cached_data
+            })
+
+        # else fetch live result
+        res = requests.get(endpoint)
+        data = res.json()
+
+        cache.set(cache_key, data, timeout=60)  # store for 1 minute
+
+        return Response({
+            "status": "fresh",
+            "geo_data": data
+        })

@@ -113,3 +113,14 @@ class RentTransactionSerializers(serializers.ModelSerializer):
             })
         
         return attrs
+
+
+class FavoriteSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.Favorites
+        fields = ['user', 'room']
+        read_only_fields = ['user']
+
+
+class SearchRoomSerializers(serializers.Serializer):
+    address = serializers.CharField()

@@ -2,10 +2,27 @@ import React from "react";
 import NavBar from "src/components/NavBar";
 import RoomCard from "src/components/RoomCard";
 import Footer from "src/components/Footer";
-
 import HeroImg from "../assets/landingpage/hero_img.png";
+import { useState } from "react";
+import axios from "axios";
 
 const LandingPage = () => {
+  const [search, setSearch] = useState("")
+
+
+  const SearchHandler = async () => {
+    try {
+      const res = await axios.post('http://127.0.0.1:8000/api/room/search/', {
+        "address": search
+      })
+      console.log(res.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+
   return (
     <div className="w-full flex flex-col bg-gray-200">
       <NavBar />
@@ -37,6 +54,8 @@ const LandingPage = () => {
             type="text"
             className="border border-gray-300 rounded-l-full px-4 py-2 w-full text-black focus:outline-none"
             placeholder="Barangay, landmark, or area..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
           <select
             defaultValue="All Types"
@@ -44,7 +63,10 @@ const LandingPage = () => {
           >
             <option disabled={true}>All Types</option>
           </select>
-          <button className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all rounded-full ml-3">
+          <button 
+            className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all rounded-full ml-3"
+            onClick={() => SearchHandler()}
+          >
             Search
           </button>
         </div>
