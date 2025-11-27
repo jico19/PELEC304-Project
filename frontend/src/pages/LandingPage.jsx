@@ -1,6 +1,6 @@
 import React from "react";
 import NavBar from "src/components/NavBar";
-import RoomCard from "src/components/RoomCard";
+import { FullRoomCard } from "src/components/RoomCard";
 import Footer from "src/components/Footer";
 
 import HeroImg from "../assets/landingpage/hero_img.png";
