@@ -28,11 +28,12 @@ class UserSerializers(serializers.ModelSerializer):
         return user
 
 class RoomSerializer(serializers.ModelSerializer):
+    owner_name = serializers.SerializerMethodField()
+    
     class Meta:
         model = models.Room
         fields = '__all__'
         read_only_fields = ['owner']
-        # exclude = ['slug_name'] # this display all the fields except for the slug_name
         
     def validate(self, attrs):
         user = self.context['request'].user
@@ -43,6 +44,9 @@ class RoomSerializer(serializers.ModelSerializer):
             }) 
             
         return attrs
+    
+    def get_owner_name(self, obj):
+        return obj.owner.username
 
 class ReportSerializers(serializers.ModelSerializer):
     room_name = serializers.SerializerMethodField()

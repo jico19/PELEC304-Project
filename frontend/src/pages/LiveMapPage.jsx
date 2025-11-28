@@ -8,45 +8,80 @@ import axios from "axios";
 import green_dot from "../assets/green-dot.png";
 import yellow_dot from "../assets/yellow-dot.png";
 import red_dot from "../assets/red-dot.png";
+import { useLocation } from "react-router-dom";
 
 const LiveMapView = () => {
   const [rentals, setRentals] = useState([]);
+  const location = useLocation()
 
-useEffect(() => {
-  // Catch actual thrown errors from Leaflet
-  const handleError = (event) => {
-    if (event.error && event.error.message && event.error.message.includes('Invalid LatLng object')) {
-      event.preventDefault();
-      event.stopPropagation();
-      return true;
-    }
-  };
 
-  window.addEventListener('error', handleError, true);
+  useEffect(() => {
+    // Catch actual thrown errors from Leaflet
+    const handleError = (event) => {
+      if (
+        event.error &&
+        event.error.message &&
+        event.error.message.includes('Invalid LatLng object')
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+        return true;
+      }
+    };
 
-  const caller = async () => {
-    try {
-      const res = await axios.get("http://127.0.0.1:8000/api/room/locations/");
-      const validRentals = res.data.data
-        .map(item => ({
-          ...item,
-          lat: parseFloat(item.lat),
-          long: parseFloat(item.long)
-        }))
-        .filter(item => !isNaN(item.lat) && !isNaN(item.long));
-      
-      setRentals(validRentals);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  
-  caller();
+    window.addEventListener('error', handleError, true);
 
-  return () => {
-    window.removeEventListener('error', handleError, true);
-  };
-}, []);
+    const caller = async () => {
+      if (location.state) {
+        console.log("Using rentals from navigation state");
+        setRentals(location.state);
+        return;
+      }
+
+      try {
+        const res = await axios.get("http://127.0.0.1:8000/api/room/locations/");
+        const validRentals = res.data.data
+          .map(item => ({
+            ...item,
+            lat: parseFloat(item.lat),
+            long: parseFloat(item.long)
+          }))
+          .filter(item => !isNaN(item.lat) && !isNaN(item.long));
+
+        setRentals(validRentals);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    caller();
+
+    return () => {
+      window.removeEventListener('error', handleError, true);
+    };
+  }, [location.state]);
+
+  // custom icon
+
+
+  const priceIcon = (price) =>
+    L.divIcon({
+      html: `
+      <div class="
+        flex items-center justify-center
+        text-xs font-bold text-white
+        bg-red-500 rounded-full
+        border-2 border-white
+        shadow
+        w-10 h-10
+      ">
+        $${price}
+      </div>
+    `,
+      className: "",
+      iconSize: [32, 32],    // smaller circle
+      iconAnchor: [16, 32],  // bottom-center anchor
+    });
 
   return (
     <div className="w-full flex flex-col bg-white">
@@ -75,22 +110,17 @@ useEffect(() => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             {rentals.map((data) => {
-              const markerIcon =
-                data.price <= 3000
-                  ? new L.icon({ iconUrl: green_dot, iconSize: [32] })
-                  : data.price <= 7000
-                    ? new L.icon({ iconUrl: yellow_dot, iconSize: [32] })
-                    : new L.icon({ iconUrl: red_dot, iconSize: [32] });
 
               return (
                 <Marker
                   key={data.room_id}
                   position={[data.lat, data.long]} // <- no parseFloat here anymore
-                  icon={markerIcon}
+                  icon={priceIcon(data.price)}
                 >
                   <Popup autoPan={false}>
                     <h1>Apartment name: {data.name}</h1>
                     <p>Price: {data.price}</p>
+                    <p>address: {data.address}</p>
                   </Popup>
                 </Marker>
               );
