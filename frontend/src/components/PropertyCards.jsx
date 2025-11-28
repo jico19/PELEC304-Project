@@ -1,51 +1,48 @@
-const PropertyCards = ({
-    image,
-    name,
-    address,
-    aircon,
-    comfortroom,
-    internet,
-    price,
-    handler
-}) => {
+import { Droplet, Airplay, Wifi } from "lucide-react";
+
+const PropertyCard = ({ image, name, address, aircon, comfortroom, internet, price, handler }) => {
     return (
-        <div className="card w-72 bg-white shadow-lg hover:shadow-xl transition-all duration-200 border border-base-200">
-            <figure className="h-40 overflow-hidden">
-                <img className="w-full object-cover" src={image} alt={name} />
+        <div className="bg-white shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 rounded-lg overflow-hidden w-full flex flex-col">
+            {/* Image */}
+            <figure className="h-48 w-full overflow-hidden">
+                <img className="w-full h-full object-cover" src={image} alt={name} />
             </figure>
 
-            <div className="card-body p-4 space-y-2">
-                <div>
-                    <h2 className="card-title text-base font-bold">{name}</h2>
-                    <p className="text-xs text-gray-600">{address}</p>
+            {/* Card Body */}
+            <div className="p-4 flex flex-col flex-1 justify-between">
+                {/* Title & Address */}
+                <div className="mb-3">
+                    <h2 className="text-lg font-bold truncate">{name}</h2>
+                    <p className="text-sm text-gray-500 truncate">{address}</p>
                 </div>
 
-                <div className="space-y-1">
-                    <h3 className="font-semibold text-xs">Amenities</h3>
-                    <div className="flex flex-wrap gap-1">
-                        <div className={`badge badge-xs ${aircon ? "badge-primary" : "badge-outline"}`}>
-                            Aircon {aircon ? "✓" : "✗"}
+                {/* Amenities */}
+                <div className="mt-2">
+                    <h3 className="font-semibold text-sm mb-1">Amenities</h3>
+                    <div className="flex flex-wrap gap-2 text-xs">
+                        <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${aircon ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-500"}`}>
+                            <Droplet className="w-4 h-4" />
+                            Aircon
                         </div>
-
-                        <div className={`badge badge-xs ${comfortroom ? "badge-primary" : "badge-outline"}`}>
-                            CR {comfortroom ? "✓" : "✗"}
+                        <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${comfortroom ? "bg-green-500 text-white" : "bg-gray-200 text-gray-500"}`}>
+                            <Airplay className="w-4 h-4" />
+                            CR
                         </div>
-
-                        <div className={`badge badge-xs ${internet ? "badge-primary" : "badge-outline"}`}>
-                            Internet {internet ? "✓" : "✗"}
+                        <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${internet ? "bg-yellow-500 text-white" : "bg-gray-200 text-gray-500"}`}>
+                            <Wifi className="w-4 h-4" />
+                            Internet
                         </div>
                     </div>
                 </div>
 
-                <div className="card-actions justify-between items-center">
-                    <span className="font-semibold text-primary text-base">
-                        ₱{price}/mo
-                    </span>
-                    <button className="btn btn-primary btn-xs" onClick={handler}>Rent me</button>
+                {/* Price & Button */}
+                <div className="flex justify-between items-center mt-4">
+                    <span className="font-semibold text-primary text-base">₱{price}/mo</span>
+                    <button className="btn btn-primary btn-sm" onClick={handler}>View</button>
                 </div>
             </div>
         </div>
     );
 };
 
-export default PropertyCards;
+export default PropertyCard;

@@ -5,17 +5,28 @@ import Footer from "src/components/Footer";
 import HeroImg from "../assets/landingpage/hero_img.png";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
   const [search, setSearch] = useState("")
-
+  const navigate = useNavigate()
 
   const SearchHandler = async () => {
     try {
+      if (!search) return // prevents from using search if no input
+
       const res = await axios.post('http://127.0.0.1:8000/api/room/search/', {
         "address": search
       })
-      console.log(res.data)
+      console.log(res.data.rooms)
+      // checks the data if its empty to not redirect
+      if (res.data.rooms.length <= 0){
+        // prolly add a toast here.. to make the user 
+        // know that the ther's no room existing
+        return
+      }
+
+      navigate('/live-map', {state: res.data.rooms})
     } catch (error) {
       console.log(error)
     }
@@ -65,7 +76,7 @@ const LandingPage = () => {
           </select>
           <button 
             className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all rounded-full ml-3"
-            onClick={() => SearchHandler()}
+            onClick={SearchHandler}
           >
             Search
           </button>
