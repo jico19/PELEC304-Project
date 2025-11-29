@@ -158,7 +158,7 @@ const LiveMapView = () => {
 
         {/* Selected rental details panel (shows when a marker is clicked) */}
         {selectedRental && (
-          <div className="absolute bottom-3 md:right-6 md:w-2/5 lg: xl:w-1/5 z-50 w-full bg-white rounded-lg shadow-lg p-4">
+          <div className="absolute bottom-3 md:right-6 md:w-2/5 lg: xl:w-1/5 z-50 w-full bg-white rounded-lg shadow-2xl p-4">
             <ModalCard
               key={selectedRental.room_id}
               name={selectedRental.name}
@@ -166,6 +166,7 @@ const LiveMapView = () => {
               availability={selectedRental.room_availability}
               price={selectedRental.price}
               dataID={selectedRental.id}
+              closeFunction={() => setSelectedRental(null)}
             />
           </div>
         )}

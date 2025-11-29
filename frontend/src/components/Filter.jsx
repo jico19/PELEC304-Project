@@ -22,13 +22,13 @@ const Filter = () => {
       </div>
 
 
-      <div className="w-full px-4 flex flex-row gap-x-2 overflow-x-auto pb-4">
+      <div className="w-full px-4 flex flex-row gap-x-2 md:gap-x-10 overflow-x-auto pb-4">
         <label className="flex items-center space-x-2">
           <input
             type="checkbox"
             className="checkbox checkbox-md bg-white border-gray-500  text-black"
           />{" "}
-          <h1 className="backdrop-blur-xs text-xs text-black font-bold">Boarding House</h1>
+          <h1 className="backdrop-blur-xs text-sm text-black font-bold">Boarding House</h1>
         </label>
 
         <label className="flex items-center space-x-2">

@@ -7,6 +7,7 @@ import LiveMapView from "./pages/LiveMapPage";
 import LandingPage from "./pages/LandingPage";
 import { Toaster } from "react-hot-toast";
 import RoomDetailPage from './pages/RoomDetailPage'
+import ProfilePage from "./pages/ProfilePage";
 
 import "leaflet/dist/leaflet.css";
 
@@ -31,6 +32,11 @@ function App() {
             path="/live-map"
             element={
                   <LiveMapView />
+          } />
+          <Route
+            path="/profile"
+            element={
+                  <ProfilePage />
           } />
           <Route path='/room/:slug_name' element={
                 <RoomDetailPage />

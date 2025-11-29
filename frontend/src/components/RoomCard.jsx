@@ -21,49 +21,51 @@ export const FullRoomCard = ({
     navigate(`/room/${slug_name}`);
   };
   return (
-    <div className="border-gray-400 shadow-md border rounded-xl animate-fadeIn">
+    <div className="border-gray-400 shadow-md border rounded-xl animate-fadeIn flex flex-col justify-between ">
       <img src={image} alt={name} className="w-full h-auto rounded-t-xl" />
       <div className="px-4 py-5 flex flex-col gap-2 bg-white rounded-b-xl">
-        <h1 className="text-md font-bold">{name}</h1>
-        <div className="flex items-center mb-6">
-          {" "}
-          <img
-            src="https://img.icons8.com/?size=100&id=3723&format=png&color=000000"
-            alt="Location"
-            className="w-5 h-5 mr-1"
-          />
-          <p className="text-gray-500">{address}</p>
-        </div>
-        <div className="flex gap-1 border-b-2 border-gray-300 pb-4">
-          <div
-            className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${
-              aircon
-                ? "badge badge-neutral text-white"
-                : "bg-gray-200 text-gray-500"
-            }`}
-          >
-            <Droplet className="w-4 h-4" />
-            Aircon
+        <div>
+          <h1 className="text-md font-bold">{name}</h1>
+          <div className="flex items-center mb-6">
+            {" "}
+            <img
+              src="https://img.icons8.com/?size=100&id=3723&format=png&color=000000"
+              alt="Location"
+              className="w-5 h-5 mr-1"
+            />
+            <p className="text-gray-500">{address}</p>
           </div>
-          <div
-            className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${
-              comfortroom
-                ? "badge badge-neutral text-white"
-                : "bg-gray-200 text-gray-500"
-            }`}
-          >
-            <Airplay className="w-4 h-4" />
-            CR
-          </div>
-          <div
-            className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${
-              internet
-                ? "badge badge-neutral text-white"
-                : "bg-gray-200 text-gray-500"
-            }`}
-          >
-            <Wifi className="w-4 h-4" />
-            Internet
+          <div className="flex gap-1 border-b-2 border-gray-300 pb-4">
+            <div
+              className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${
+                aircon
+                  ? "badge badge-neutral text-white"
+                  : "bg-gray-200 text-gray-500"
+              }`}
+            >
+              <Droplet className="w-4 h-4" />
+              Aircon
+            </div>
+            <div
+              className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${
+                comfortroom
+                  ? "badge badge-neutral text-white"
+                  : "bg-gray-200 text-gray-500"
+              }`}
+            >
+              <Airplay className="w-4 h-4" />
+              CR
+            </div>
+            <div
+              className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${
+                internet
+                  ? "badge badge-neutral text-white"
+                  : "bg-gray-200 text-gray-500"
+              }`}
+            >
+              <Wifi className="w-4 h-4" />
+              Internet
+            </div>
           </div>
         </div>
 
@@ -132,8 +134,14 @@ export const DummyFullRoomCard = () => {
   );
 };
 
-export const ModalCard = ({ name, address, availability, price, dataID }) => {
-
+export const ModalCard = ({
+  name,
+  address,
+  availability,
+  price,
+  dataID,
+  closeFunction,
+}) => {
   const navigate = useNavigate();
 
   const RentNowHandler = async (slug_name) => {
@@ -144,7 +152,15 @@ export const ModalCard = ({ name, address, availability, price, dataID }) => {
   return (
     <div className="border-gray-400 shadow-md border rounded-xl">
       <div className="px-4 py-5 flex flex-col gap-2 bg-white rounded-xl">
-        <h1 className="text-lg font-bold">{name}</h1>
+        <div className="flex justify-between">
+          <h1 className="text-lg font-bold">{name}</h1>
+          <button
+            onClick={closeFunction}
+            className="btn w-10 h-10 font-bold rounded-full hover:bg-white hover:text-black hover:scale-95 transition-all "
+          >
+            X
+          </button>
+        </div>
         <div className="flex items-center mb-6">
           {" "}
           <img
@@ -173,7 +189,7 @@ export const ModalCard = ({ name, address, availability, price, dataID }) => {
             <span className="text-xs font-normal">per month</span>
           </div>
           <button
-            className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all w-3/5"
+            className="btn hover:bg-white hover:text-black hover:scale-95 transition-all w-3/5"
             onClick={() => RentNowHandler(dataID)}
           >
             Rent Me
