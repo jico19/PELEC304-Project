@@ -115,10 +115,11 @@ const LiveMapView = () => {
 
   return (
     <div className="w-full flex flex-col bg-white ">
-      <div className="w-full  flex flex-col bg-white overflow-hidden">
-        <NavBar />
+      <NavBar />
+      <div className="relative h-screen flex justify-center items-center animate-fadeIn">
+        <Filter />
 
-        <div className="relative flex-1 w-full h-[calc(100vh-4rem)] mt-16">
+        <div className="flex flex-col mt-25 mb-10 w-full md:w-8/9 h-8/9 rounded-2xl shadow-xl overflow-hidden z-0 ">
           <MapContainer
             center={[13.9357696, 121.6128612]}
             zoom={13.3}
@@ -144,33 +145,46 @@ const LiveMapView = () => {
 
           {/* CARD */}
           {selectedRental && (
-            <div
-              ref={cardRef}
-              className={`
-              absolute bottom-5 right-5 w-80 bg-white shadow-xl rounded-xl p-4 z-9999
-              transition-all duration-300 ease-out
-              ${
-                showCard
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-5 pointer-events-none"
-              }
-            `}
-              onClick={() => navigate(`/room/${selectedRental.slug_name}`)}
-            >
-              <img
-                src={selectedRental.room_picture}
-                alt={selectedRental.name}
-                className="w-full h-40 object-cover rounded-lg mb-3"
+            <div className="absolute bottom-3 md:right-6 md:w-2/5 lg: xl:w-1/5 z-400 w-full bg-white rounded-lg shadow-2xl p-4">
+              <ModalCard
+                onClick={() => navigate(`/room/${selectedRental.slug_name}`)}
+                cardRef={cardRef}
+                showCard={showCard}
+                room_picture={selectedRental.room_picture}
+                name={selectedRental.name}
+                address={selectedRental.address}
+                price={selectedRental.price}
               />
-              <h2 className="font-bold text-lg">{selectedRental.name}</h2>
-              <p className="text-sm text-gray-600">{selectedRental.address}</p>
-              <p className="font-semibold mt-1">
-                ${selectedRental.price}/month
-              </p>
             </div>
+            // <div
+            //   ref={cardRef}
+            //   className={`
+            //   absolute bottom-5 right-5 w-80 bg-white shadow-xl rounded-xl p-4 z-9999
+            //   transition-all duration-300 ease-out
+            //   ${
+            //     showCard
+            //       ? "opacity-100 translate-y-0"
+            //       : "opacity-0 translate-y-5 pointer-events-none"
+            //   }
+            // `}
+            //   onClick={() => navigate(`/room/${selectedRental.slug_name}`)}
+            // >
+            //   <img
+            //     src={selectedRental.room_picture}
+            //     alt={selectedRental.name}
+            //     className="w-full h-40 object-cover rounded-lg mb-3"
+            //   />
+            //   <h2 className="font-bold text-lg">{selectedRental.name}</h2>
+            //   <p className="text-sm text-gray-600">{selectedRental.address}</p>
+            //   <p className="font-semibold mt-1">
+            //     ${selectedRental.price}/month
+            //   </p>
+            // </div>
           )}
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };

@@ -28,20 +28,20 @@ const NavBar = () => {
 
   const menuItems = token
     ? [
-      { name: "Home", path: "/home" },
+      { name: "Home", path: "/" },
       { name: "Profile", path: `/profile/${profile?.user_id || ""}` },
       { name: "Recommendation", path: "/home" },
       { name: "Live Map", path: "/live-map" },
     ]
     : [
       { name: "Home", path: "/" },
-      { name: "Recommendation", path: "/" },
+      { name: "Recommendation", path: "/home" },
       { name: "About", path: "/" },
       { name: "Live Map", path: "/live-map" },
     ];
 
   return (
-    <nav className="fixed top-0 w-full bg-white shadow-md z-[60]">
+    <nav className="fixed top-0 w-full bg-white shadow-md z-60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-20 flex justify-between items-center h-16">
         {/* Logo */}
         <div className="text-xl font-bold cursor-pointer" onClick={() => navigate("/")}>

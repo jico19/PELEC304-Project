@@ -104,13 +104,13 @@ const UserProfile = () => {
     if (!profile) return <div>Loading...</div>;
 
     return (
-        <div className="flex flex-col min-h-screen w-full bg-gray-50">
+        <div className="flex flex-col min-h-screen w-full bg-gray-50 ">
             <NavBar />
 
-            <main className="flex-1 mt-24 px-4">
+            <main className="flex-1 mt-24 px-4 animate-fadeIn">
                 <div className="container mx-auto max-w-6xl py-8 space-y-8">
                     {/* Profile Header */}
-                    <div className="flex flex-col sm:flex-row items-center sm:items-start bg-gradient-to-r from-indigo-100 to-purple-100 rounded-2xl p-6 shadow-lg gap-6">
+                    <div className="flex flex-col sm:flex-row items-center sm:items-start bg-linear-to-r from-indigo-100 to-purple-100 rounded-2xl p-6 shadow-lg gap-6">
                         <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl bg-indigo-500 flex items-center justify-center text-white text-3xl font-bold overflow-hidden shadow-inner">
                             {localStorage.getItem("profile_pic") ? (
                                 <img

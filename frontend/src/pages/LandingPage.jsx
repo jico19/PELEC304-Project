@@ -9,30 +9,30 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const LandingPage = () => {
-  const [search, setSearch] = useState("")
-  const navigate = useNavigate()
+  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   const SearchHandler = async () => {
     try {
-      if (!search) return // prevents from using search if no input
+      if (!search) return; // prevents from using search if no input
 
-      const res = await axios.post('http://127.0.0.1:8000/api/room/search/', {
-        "address": search
-      })
-      console.log(res.data.rooms)
+      const res = await axios.post("http://127.0.0.1:8000/api/room/search/", {
+        address: search,
+      });
+      console.log(res.data.rooms);
       // checks the data if its empty to not redirect
-      if (res.data.rooms.length <= 0){
-        toast.error("No rentals found for the given location.", {position: "bottom-center"})
-        return
+      if (res.data.rooms.length <= 0) {
+        toast.error("No rentals found for the given location.", {
+          position: "bottom-center",
+        });
+        return;
       }
 
-      navigate('/live-map', {state: res.data.rooms})
+      navigate("/live-map", { state: res.data.rooms });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
-
-
+  };
 
   return (
     <div className="w-full flex flex-col bg-gray-200">
@@ -55,29 +55,32 @@ const LandingPage = () => {
           dormitory, apartment, or hotel for students, OFWs, and professionals
           in Lucena City.
         </p>
-        <div className="bg-white flex flex-row p-5 rounded-full w-full z-10 items-center md:w-4/5 lg:w-2/5">
-          <img
-            src="https://img.icons8.com/?size=100&id=3723&format=png&color=000000"
-            alt="Location"
-            className="w-5 h-5 mr-2"
-          />
-          <input
-            type="text"
-            className="border border-gray-300 rounded-l-full px-4 py-2 w-full text-black focus:outline-none"
-            placeholder="Barangay, landmark, or area..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+        <div className=" bg-gray-200 flex flex-col p-5 rounded-xl gap-2 md:gap-0 md:rounded-full w-full z-10 items-center md:flex-row md:w-4/5 lg:w-4/5 xl:w-3/5 animate-fadeIn transition-all duration-500 ease-in-out self-center ">
+          <div className="border-2 border-gray-300 bg-white rounded-full md:rounded-r-none px-4 py-2 w-full text-black items-center flex">
+            <img
+              src="https://img.icons8.com/?size=100&id=3723&format=png&color=000000"
+              alt="Location"
+              className="w-5 h-5 mr-2"
+            />
+            <input
+              type="text"
+              className="w-full focus:outline-none"
+              placeholder="Barangay, landmark, or area..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
           <select
             defaultValue="All Types"
-            className="select bg-white border-2 border-gray-300 px-4 py-2 text-black rounded-r-full focus:outline-none"
+          className="select bg-white border-2 border-gray-300 px-4 h-11 w-full md:w-3/5 lg:w-2/5 text-black rounded-full md:rounded-l-none focus:outline-none"
           >
             <option disabled={true}>All Types</option>
             <option>Boarding House</option>
             <option>Apartment</option>
             <option>Dorm</option>
           </select>
-          <button 
+          <button
             className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all rounded-full ml-3"
             onClick={SearchHandler}
           >
@@ -98,7 +101,10 @@ const LandingPage = () => {
           <DummyFullRoomCard />
         </div>
 
-        <button className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all" onClick={() => navigate('/login')}>
+        <button
+          className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all"
+          onClick={() => navigate("/home")}
+        >
           View All Rentals
         </button>
       </section>
@@ -152,7 +158,9 @@ const LandingPage = () => {
           property for free and start earning today.
         </p>
 
-        <button className="btn border-none hover:scale-95 transition-all bg-white text-black text-xl px-10 py-7 rounded-lg">List your Property Now </button>
+        <button className="btn border-none hover:scale-95 transition-all bg-white text-black text-xl px-10 py-7 rounded-lg">
+          List your Property Now{" "}
+        </button>
       </section>
 
       <Footer />

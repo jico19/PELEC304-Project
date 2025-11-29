@@ -135,12 +135,13 @@ export const DummyFullRoomCard = () => {
 };
 
 export const ModalCard = ({
+  onClick,
+  cardRef,
+  showCard,
+  room_picture,
   name,
   address,
-  availability,
   price,
-  dataID,
-  closeFunction,
 }) => {
   const navigate = useNavigate();
 
@@ -150,17 +151,18 @@ export const ModalCard = ({
   };
 
   return (
-    <div className="border-gray-400 shadow-md border rounded-xl">
+    <div
+      className={`border-gray-400 shadow-md border rounded-xl ${
+        showCard
+          ? "opacity-100 translate-y-0"
+          : "opacity-0 translate-y-5 pointer-events-none"
+      }`}
+      ref={cardRef}
+      onClick={onClick}
+    >
+      <img src={room_picture} alt={name} className="w-full h-auto" />
       <div className="px-4 py-5 flex flex-col gap-2 bg-white rounded-xl">
-        <div className="flex justify-between">
-          <h1 className="text-lg font-bold">{name}</h1>
-          <button
-            onClick={closeFunction}
-            className="btn w-10 h-10 font-bold rounded-full hover:bg-white hover:text-black hover:scale-95 transition-all "
-          >
-            X
-          </button>
-        </div>
+        <h1 className="text-lg font-bold">{name}</h1>
         <div className="flex items-center mb-6">
           {" "}
           <img
@@ -170,16 +172,6 @@ export const ModalCard = ({
           />
           <p className="text-gray-500 text-sm">{address}</p>
         </div>
-
-        <div
-          className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${
-            availability == "Available"
-              ? "badge badge-neutral text-white"
-              : "bg-gray-200 text-gray-500"
-          }`}
-        >
-          {availability == "Available" ? "Available" : "Not Available"}
-        </div>
         <div className="flex w-full items-center gap-2 justify-around border-t-2 border-gray-300 pt-4">
           <div className="flex flex-col text-center">
             <p className="text-2xl font-bold">
@@ -188,12 +180,6 @@ export const ModalCard = ({
             </p>
             <span className="text-xs font-normal">per month</span>
           </div>
-          <button
-            className="btn hover:bg-white hover:text-black hover:scale-95 transition-all w-3/5"
-            onClick={() => RentNowHandler(dataID)}
-          >
-            Rent Me
-          </button>
         </div>
       </div>
     </div>
