@@ -1,11 +1,24 @@
+import { useState } from "react";
 import { Droplet, Airplay, Wifi } from "lucide-react";
 
 const PropertyCard = ({ image, name, address, aircon, comfortroom, internet, price, handler }) => {
+    const [imgLoaded, setImgLoaded] = useState(false);
+
     return (
         <div className="bg-white shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 rounded-lg overflow-hidden w-full flex flex-col">
             {/* Image */}
-            <figure className="h-48 w-full overflow-hidden">
-                <img className="w-full h-full object-cover" src={image} alt={name} />
+            <figure className="h-48 w-full overflow-hidden relative bg-gray-300">
+                {!imgLoaded && (
+                    <div className="absolute inset-0 animate-pulse bg-gray-300" />
+                )}
+                <img
+                    src={image}
+                    alt={name}
+                    loading="lazy"
+                    onLoad={() => setImgLoaded(true)}
+                    className={`w-full h-full object-cover transition-opacity duration-500 ${imgLoaded ? "opacity-100" : "opacity-0"
+                        }`}
+                />
             </figure>
 
             {/* Card Body */}
@@ -38,7 +51,7 @@ const PropertyCard = ({ image, name, address, aircon, comfortroom, internet, pri
                 {/* Price & Button */}
                 <div className="flex justify-between items-center mt-4">
                     <span className="font-semibold text-primary text-base">₱{price}/mo</span>
-                    <button className="btn btn-primary btn-sm" onClick={handler}>View</button>
+                    <button className="btn btn-sm" onClick={handler}>View</button>
                 </div>
             </div>
         </div>

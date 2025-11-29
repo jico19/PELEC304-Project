@@ -8,6 +8,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 from django.core.cache import cache
 from django.db.models import Q
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 #
 from rest_framework.response import Response
 from . import models
@@ -34,12 +35,11 @@ class LogoutView(views.APIView):
     Longitude and LAT
 '''
 
-@method_decorator(cache_page(60, key_prefix='all_rooms'), name="get")
+# @method_decorator(cache_page(60, key_prefix='all_rooms'), name="get")
 class RoomsLocations(views.APIView):
-    # permission_classes = [IsAuthenticated]
     
     def get(self, request):
-        data = Room.objects.filter(room_availability='Available').values('room_id', 'name', 'lat', 'long', 'price', 'room_availability', 'address')
+        data = Room.objects.filter(room_availability='Available').values('slug_name', 'name', 'lat', 'long', 'price', 'room_availability', 'address')
         
         return Response({"data": data})
 
@@ -82,7 +82,6 @@ class GoogleLoginView(views.APIView):
 
     def post(self, request):
         token = request.data.get('token') # google sent id token 
-        
         if not token:
             return Response({"error": "ID Token Missing."}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -90,7 +89,8 @@ class GoogleLoginView(views.APIView):
             idinfo = id_token.verify_oauth2_token(
                 token,
                 requests.Request(),
-                settings.GOOGLE_CLIENT_ID
+                settings.GOOGLE_CLIENT_ID,
+                clock_skew_in_seconds=10
             )
             # Extract fields
             email = idinfo.get("email")
@@ -124,6 +124,7 @@ class GoogleLoginView(views.APIView):
             })
 
         except ValueError:
+            print(token)
             return Response({"error": "Invalid ID token"}, status=400)
         
         

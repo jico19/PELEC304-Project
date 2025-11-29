@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import api from "src/utils/api";
+import api from "src/utils/Api";
 import NavBar from "src/components/NavBar";
 import PropertyCards from "src/components/PropertyCards";
 import { FullRoomCard } from "src/components/RoomCard";
@@ -9,25 +9,31 @@ import Pagination from "src/components/PaginationButton";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate();;
   const [rentals, setRentals] = useState([]);
   const [count, setCount] = useState(0);
   const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(true); // loading state
   const [isSearchCollapsed, setIsSearchCollapsed] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const limit = 9;
 
-  const fetchRooms = async (pageNumber = 1) => {
-    try {
-      const offset = (pageNumber - 1) * limit;
-      const res = await api.get(`room/?limit=${limit}&offset=${offset}`);
-      setRentals(res.data.results);
-      setCount(res.data.count);
-      setPage(pageNumber);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    const fetchRooms = async (pageNumber = 1) => {
+        try {
+            setLoading(true);
+            const offset = (pageNumber - 1) * limit;
+            const res = await api.get(`room/?limit=${limit}&offset=${offset}`);
+            setRentals(res.data.results);
+            setCount(res.data.count);
+            setPage(pageNumber);
+            console.log(res.data)
+            localStorage.setItem('cache_item', JSON.stringify(res.data.results))
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
   useEffect(() => {
     fetchRooms();

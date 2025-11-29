@@ -23,12 +23,14 @@ const GoogleLoginTest = () => {
       localStorage.setItem("access_token", res.data.access);
       localStorage.setItem("refresh_token", res.data.refresh);
       localStorage.setItem("profile_pic", res.data.user.avatar);
+      console.log(res.data)
       navigate("/home");
     } catch (err) {
       console.error(
         "Error sending ID token to backend:",
         err.response?.data || err
       );
+      console.log(id_token)
     }
   };
 

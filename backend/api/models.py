@@ -54,9 +54,9 @@ class CustomUser(AbstractUser):
         ],
         blank=True
     )
-    marital_status = models.CharField(max_length=20, choices=MARITAL_STATUS_CHOICES, default="Single")
-    gender = models.CharField(max_length=20, choices=GENDER_CHOICES, default="Others")
-    permanent_address = models.CharField(max_length=300, default="")
+    marital_status = models.CharField(max_length=20, choices=MARITAL_STATUS_CHOICES, default="Single", blank=True)
+    gender = models.CharField(max_length=20, choices=GENDER_CHOICES, default="Others", blank=True)
+    permanent_address = models.CharField(max_length=300, default="", blank=True)
     role = models.CharField(max_length=20, choices=USER_ROLE_CHOICES, default="Tenant")
     budget = models.IntegerField(default=randint(1000,20000))
     
@@ -146,7 +146,7 @@ class ActiveRent(models.Model):
     )
 
     rent_id = ShortUUIDField(
-        length=5,
+        length=5, 
         max_length=30,
         prefix="rent_",
         alphabet="abcdefg1234",
@@ -154,14 +154,15 @@ class ActiveRent(models.Model):
         editable=False
     )
 
-    rent_transaction = models.ForeignKey(RentTransaction, on_delete=models.CASCADE)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    tenant = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    rent_transaction = models.OneToOneField(RentTransaction, on_delete=models.CASCADE)
+    room = models.OneToOneField(Room, on_delete=models.CASCADE)
+    tenant = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     start_date = models.DateTimeField(default=timezone.now)
     due_date = models.DateTimeField(null=True, blank=True)
     amount = models.IntegerField(default=0)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="Active")
-
+    email_reminder_sent = models.BooleanField(default=False)
+    
     def __str__(self):
         return f"Rent {self.rent_id} - {self.room.name} by {self.tenant.username}"
     
@@ -206,3 +207,12 @@ class Favorites(models.Model):
     
     def __str__(self):
         return f"{self.user.username} - {self.room.name}"
+
+class RentPaymentHistory(models.Model):
+    renter = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    date_paid = models.DateTimeField(auto_now_add=True, blank=True)
+    amount = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return f"{self.renter.username} - {self.room.room_id} - {self.date_paid} - {self.amount}"

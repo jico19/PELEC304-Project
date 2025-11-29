@@ -7,6 +7,8 @@ import LiveMapView from "./pages/LiveMapPage";
 import LandingPage from "./pages/LandingPage";
 import { Toaster } from "react-hot-toast";
 import RoomDetailPage from './pages/RoomDetailPage'
+import UserProfile from './pages/UserProfile'
+import ManageRent from './pages/ManageRent'
 import ProfilePage from "./pages/ProfilePage";
 
 import "leaflet/dist/leaflet.css";
@@ -39,9 +41,20 @@ function App() {
                   <ProfilePage />
           } />
           <Route path='/room/:slug_name' element={
-                <RoomDetailPage />
-            }
-          />
+            <ProtectedRoutes>
+              <RoomDetailPage />
+            </ProtectedRoutes>
+          } />
+          <Route path='/profile/:user_id' element={
+            <ProtectedRoutes>
+              <UserProfile />
+            </ProtectedRoutes>
+          } />
+          <Route path='/manage/rent/:user_id' element={
+            <ProtectedRoutes>
+              <ManageRent />
+            </ProtectedRoutes>
+          } />
         </Routes>
       </BrowserRouter>
     </div>
