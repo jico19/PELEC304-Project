@@ -1,4 +1,4 @@
-import React from "react";
+import { Droplet, Airplay, Wifi } from "lucide-react";
 import CardImg from "../assets/landingpage/card_img.png";
 
 const necessities = ["Aircon", "CR", "Internet"];
@@ -28,14 +28,33 @@ export const FullRoomCard = ({
           <p className="text-gray-500">{address}</p>
         </div>
         <div className="flex gap-1 border-b-2 border-gray-300 pb-4">
-          <div className="flex items-center gap-1 bg-gray-200 px-2 py-1 rounded-full text-xs">
-            Aircon {aircon ? "✓" : "✗"}
+          <div
+            className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${
+              aircon ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-500"
+            }`}
+          >
+            <Droplet className="w-4 h-4" />
+            Aircon
           </div>
-          <div className="flex items-center gap-1 bg-gray-200 px-2 py-1 rounded-full text-xs">
-              CR {comfortroom ? "✓" : "✗"}
+          <div
+            className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${
+              comfortroom
+                ? "bg-green-500 text-white"
+                : "bg-gray-200 text-gray-500"
+            }`}
+          >
+            <Airplay className="w-4 h-4" />
+            CR
           </div>
-          <div className="flex items-center gap-1 bg-gray-200 px-2 py-1 rounded-full text-xs">
-            Internet {internet ? "✓" : "✗"}
+          <div
+            className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${
+              internet
+                ? "bg-yellow-500 text-white"
+                : "bg-gray-200 text-gray-500"
+            }`}
+          >
+            <Wifi className="w-4 h-4" />
+            Internet
           </div>
         </div>
 
@@ -47,7 +66,10 @@ export const FullRoomCard = ({
             </p>
             <span className="text-xs font-normal">per month</span>
           </div>
-          <button className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all w-3/5" onClick={handler}>
+          <button
+            className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all w-3/5"
+            onClick={handler}
+          >
             Rent Me
           </button>
         </div>
