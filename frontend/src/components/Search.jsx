@@ -7,7 +7,7 @@ const Search = ({ isSearchCollapsed }) => {
         isSearchCollapsed ? "scale-95" : "scale-100"
       }`}
     >
-      <div className="border-2 border-gray-300 bg-white rounded-full md:rounded-l-full px-4 py-2 w-full text-black items-center flex">
+      <div className="border-2 border-gray-300 bg-white rounded-full md:rounded-r-none px-4 py-2 w-full text-black items-center flex">
         <img
           src="https://img.icons8.com/?size=100&id=3723&format=png&color=000000"
           alt="Location"
@@ -21,7 +21,7 @@ const Search = ({ isSearchCollapsed }) => {
       </div>
       <select
         defaultValue="All Types"
-        className="select bg-white border-2 border-gray-300 px-4 py-2 text-black rounded-full md:rounded-r-full focus:outline-none"
+        className="select bg-white border-2 border-gray-300 px-4 h-11 w-full md:w-3/5 lg:w-2/5 text-black rounded-full md:rounded-l-none focus:outline-none"
       >
         <option disabled={true}>All Types</option>
       </select>

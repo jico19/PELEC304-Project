@@ -26,7 +26,8 @@ const RoomDetailPage = () => {
 
     if (!room)
         return (
-            <div className="flex justify-center items-center h-screen">
+            <div className="flex flex-col justify-center items-center h-screen">
+                <p className="loading loading-bars loading-xl"></p>
                 <p className="text-xl text-gray-500">Loading...</p>
             </div>
         );

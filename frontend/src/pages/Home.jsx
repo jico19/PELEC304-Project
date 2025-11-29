@@ -77,9 +77,7 @@ const Home = () => {
         </h1>
 
         <div className="w-full xl:w-4/5 grid p-5 gap-6 mb-6 justify-items-center md:grid-cols-2 lg:grid-cols-3">
-          {rentals.map((data) => {
-            console.log(data);
-            return (
+          {rentals.map((data) => (
               <FullRoomCard
                 key={data.room_id}
                 image={data.room_picture}
@@ -91,8 +89,8 @@ const Home = () => {
                 price={data.price}
                 dataID={data.id}
               />
-            );
-          })}
+            )
+          )}
         </div>
         <div className="flex justify-end mt-8">
           <Pagination

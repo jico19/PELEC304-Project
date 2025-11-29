@@ -1,4 +1,4 @@
-import { Droplet, Airplay, Wifi } from "lucide-react";
+import { Droplet, Toilet, Wifi } from "lucide-react";
 import CardImg from "../assets/landingpage/card_img.png";
 import { useNavigate } from "react-router-dom";
 
@@ -40,7 +40,7 @@ export const FullRoomCard = ({
               className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${
                 aircon
                   ? "badge badge-neutral text-white"
-                  : "bg-gray-200 text-gray-500"
+                  : "bg-gray-200 text-gray-500 line-through"
               }`}
             >
               <Droplet className="w-4 h-4" />
@@ -50,17 +50,17 @@ export const FullRoomCard = ({
               className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${
                 comfortroom
                   ? "badge badge-neutral text-white"
-                  : "bg-gray-200 text-gray-500"
+                  : "bg-gray-200 text-gray-500 line-through"
               }`}
             >
-              <Airplay className="w-4 h-4" />
+              <Toilet className="w-4 h-4" />
               CR
             </div>
             <div
               className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${
                 internet
                   ? "badge badge-neutral text-white"
-                  : "bg-gray-200 text-gray-500"
+                  : "bg-gray-200 text-gray-500 line-through"
               }`}
             >
               <Wifi className="w-4 h-4" />

@@ -26,7 +26,7 @@ const Filter = () => {
         <label className="flex items-center space-x-2">
           <input
             type="checkbox"
-            className="checkbox checkbox-md bg-white border-gray-500  text-black"
+            className="toggle toggle-md bg-white border-gray-500  text-black"
           />{" "}
           <h1 className="backdrop-blur-xs text-sm text-black font-bold">Boarding House</h1>
         </label>
@@ -34,7 +34,7 @@ const Filter = () => {
         <label className="flex items-center space-x-2">
           <input
             type="checkbox"
-            className="checkbox checkbox-md bg-white border-gray-500  text-black"
+            className="toggle toggle-md bg-white border-gray-500  text-black"
           />{" "}
           <h1 className="backdrop-blur-xs text-sm text-black font-bold">Apartment</h1>
         </label>
@@ -42,7 +42,7 @@ const Filter = () => {
         <label className="flex items-center space-x-2">
           <input
             type="checkbox"
-            className="checkbox checkbox-md bg-white border-gray-500  text-black"
+            className="toggle toggle-md bg-white border-gray-500  text-black"
           />{" "}
           <h1 className="backdrop-blur-xs text-sm text-black font-bold">Dorm</h1>
         </label>
