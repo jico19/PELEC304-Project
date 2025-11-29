@@ -32,7 +32,7 @@ class RoomViewSets(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
     def perform_destroy(self, instance):
-        instance.delete()
+        instance.delete() 
 
 class RentViewSets(viewsets.ModelViewSet):
     ''''
@@ -71,3 +71,13 @@ class ReportViewSests(viewsets.ModelViewSet):
             reporter=self.request.user
         )
         return report
+
+class FavoriteViewSets(viewsets.ModelViewSet):
+    serializer_class = serializers.FavoriteSerializers
+    
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
+    
+    def get_queryset(self):
+        data = models.Favorites.objects.filter(user=self.request.user)
+        return data

@@ -1,22 +1,19 @@
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework import generics, views, status, response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import views, status, response
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-
-
 from google.oauth2 import id_token
 from google.auth.transport import requests
+from django.core.cache import cache
+from django.db.models import Q
 #
 from rest_framework.response import Response
 from . import models
 from . import serializers
 from .utils import filter_by_budget_room
 from .models import Room
-
-
 
 User = get_user_model()
 
@@ -36,13 +33,13 @@ class LogoutView(views.APIView):
     HOUSE BUDGET,
     Longitude and LAT
 '''
-CACHE_KEY = "all_rooms_v1"
+
 @method_decorator(cache_page(60, key_prefix='all_rooms'), name="get")
 class RoomsLocations(views.APIView):
     # permission_classes = [IsAuthenticated]
     
     def get(self, request):
-        data = Room.objects.filter(room_availability='Available').values('room_id', 'name', 'lat', 'long', 'price', 'room_availability')
+        data = Room.objects.filter(room_availability='Available').values('room_id', 'name', 'lat', 'long', 'price', 'room_availability', 'address')
         
         return Response({"data": data})
 
@@ -128,3 +125,29 @@ class GoogleLoginView(views.APIView):
 
         except ValueError:
             return Response({"error": "Invalid ID token"}, status=400)
+        
+        
+
+class GeoCoding(views.APIView):
+    serializer_class = serializers.SearchRoomSerializers
+
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        
+        if serializer.is_valid():
+            search = serializer.validated_data.get('address')
+                        
+            searched_room = models.Room.objects.filter(
+                Q(name__icontains=search) |
+                Q(address__icontains=search) |
+                Q(owner__username__icontains=search)
+            )
+            
+            room_serializer = serializers.RoomSerializer(searched_room, many=True)
+
+            return Response({
+                "rooms": room_serializer.data
+            })
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -1,86 +1,106 @@
 import { useState, useEffect } from "react";
 import api from "src/utils/api";
-import Maps from "src/components/Maps";
 import NavBar from "src/components/NavBar";
 import PropertyCards from "src/components/PropertyCards";
-import { FullRoomCard } from "src/components/RoomCard";
-import Search from "src/components/Search";
+import { Search } from "lucide-react";
 import Footer from "src/components/Footer";
+import Pagination from "src/components/PaginationButton";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const [rentals, setRentals] = useState([]);
+    const navigate = useNavigate()
+    const [rentals, setRentals] = useState([]);
+    const [count, setCount] = useState(0);
+    const [page, setPage] = useState(1);
+    const limit = 8;
 
-  useEffect(() => {
-    const caller = async () => {
-      try {
-        const res = await api.get("room/");
-        setRentals(res.data.results);
-      } catch (error) {
-        console.log(error);
-      }
+    const fetchRooms = async (pageNumber = 1) => {
+        try {
+            const offset = (pageNumber - 1) * limit;
+            const res = await api.get(`room/?limit=${limit}&offset=${offset}`);
+            setRentals(res.data.results);
+            setCount(res.data.count);
+            setPage(pageNumber);
+        } catch (error) {
+            console.log(error);
+        }
     };
-    caller();
-  }, []);
 
-  const RentNowHandler = async (room_id) => {
-    try {
-      const res = await api.post("transaction/", { room: room_id });
-      console.log(res.data);
-      console.log("Successfuly rented a room!");
-    } catch (error) {
-      console.log(error.response.data);
-    }
-  };
+    useEffect(() => {
+        fetchRooms();
+    }, []);
 
-  return (
-    <div className="w-full flex flex-col bg-gray-200">
-      <NavBar />
-      {/* <h1>This is Home!</h1>
-            <h1>!!notes!! dapat andito yung maps tas parang cards nung mga Avaiable na rental homes</h1>
-            ))} */}
+    const RentNowHandler = async (slug_name) => {
+        console.log(slug_name)
+        navigate(`/room/${slug_name}`)
+    };
 
-      <section className=" sticky top-0 z-10 w-full pt-30 pb-10 shadow px-10 flex flex-col items-center bg-white">
-        <h1 className="text-3xl font-bold mb-2">Search Destinations</h1>
-        <p className="text-sm text-gray-500 mb-5">
-          Discover our hand picked of the best rentals in Lucena City.
-        </p>
-        <Search />
-      </section>
+    return (
+        <div className="flex flex-col min-h-screen w-full">
+            <NavBar />
 
-      <section className=" w-full pt-10 pb-30 px-10 flex flex-col items-center bg-white">
-        <h1 className="w-full text-2xl font-bold mb-2 text-start lg:ml-30">
-          Available Rentals
-        </h1>
+            <main className="flex-1 mt-20 px-4">
+                <div className="container mx-auto py-8 max-w-[1400px]">
 
-        <div className="w-full lg:w-3/5 grid p-5 gap-6 mb-6 justify-items-center md:grid-cols-2 lg:grid-cols-3">
-          {rentals.map((data) => (
-            <FullRoomCard
-              key={data.room_id}
-              image={data.room_picture}
-              name={data.name}
-              address={data.address}
-              aircon={data.air_condition}
-              comfortroom={data.comfort_room}
-              internet={data.internet}
-              price={data.price}
-              handler={() => RentNowHandler(data.id)}
-            />
-          ))}
+                    {/* Header & Search stacked */}
+                    <div className="flex flex-col gap-6 mb-8">
+                        <div className="text-center sm:text-left">
+                            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
+                                Find Your Perfect Room
+                            </h1>
+                            <p className="text-gray-600 text-base sm:text-lg mt-2">
+                                One renter at a time
+                            </p>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row gap-3 w-full">
+                            <div className="relative flex-1">
+                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                <input
+                                    type="text"
+                                    placeholder="Search by location or room type..."
+                                    className="pl-12 h-14 w-full text-lg border border-gray-300 rounded shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+                                />
+                            </div>
+                            <button className="btn btn-primary h-14 px-6 sm:px-4 self-stretch">
+                                Search
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Rooms Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        {rentals.map((data) => (
+                            <PropertyCards
+                                key={data.room_id}
+                                image={data.room_picture}
+                                name={data.name}
+                                address={data.address}
+                                aircon={data.air_condition}
+                                comfortroom={data.comfort_room}
+                                internet={data.internet}
+                                price={data.price}
+                                handler={() => RentNowHandler(data.slug_name)}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Pagination */}
+                    <div className="flex justify-end mt-8">
+                        <Pagination
+                            count={count}
+                            limit={limit}
+                            page={page}
+                            onPageChange={fetchRooms}
+                        />
+                    </div>
+
+                </div>
+            </main>
+
+            <Footer />
         </div>
-      </section>
-
-      <Footer />
-    </div>
-  );
+    );
 };
 
 export default Home;
-{
-  /* 
-    sa detail view pweding gumamit ka ng modal to dispaly the information nung room
-    like sa card kunti lang pakita mo like yung name tas price lang tas lagay ka nalang ng detailview
-    tas dun mo lagay kung air conditioned ba o hindi yung mga ganun
-    naacess isya through slug name
-    api/room/slug_name/
-*/
-}

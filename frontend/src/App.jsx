@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import LiveMapView from "./pages/LiveMapPage";
 import LandingPage from "./pages/LandingPage";
 import { Toaster } from "react-hot-toast";
+import RoomDetailPage from './pages/RoomDetailPage'
 
 import "leaflet/dist/leaflet.css";
 
@@ -29,9 +30,10 @@ function App() {
           <Route
             path="/live-map"
             element={
-              <ProtectedRoutes>
-                <LiveMapView />
-              </ProtectedRoutes>
+                  <LiveMapView />
+          } />
+          <Route path='/room/:slug_name' element={
+                <RoomDetailPage />
             }
           />
         </Routes>

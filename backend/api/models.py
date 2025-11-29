@@ -81,6 +81,7 @@ class Room(models.Model):
     owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=300, default="")
     address = models.CharField(max_length=300, default="")
+    description = models.CharField(max_length=300, default="")
     lat = models.FloatField(default=0.0)
     long = models.FloatField(default=0.0)
     room_picture = models.ImageField(upload_to="rooms/")
@@ -197,3 +198,11 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification {self.notification_id}"
+
+
+class Favorites(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.room.name}"

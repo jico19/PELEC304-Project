@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, Room, Notification, ActiveRent, Reports, RentTransaction
+from .models import CustomUser, Room, Notification, ActiveRent, Reports, RentTransaction, Favorites
 from django.contrib.auth.admin import UserAdmin
 
 class CustomUserAdmin(UserAdmin):
@@ -32,3 +32,4 @@ admin.site.register(Notification)
 admin.site.register(ActiveRent)
 admin.site.register(Reports)
 admin.site.register(RentTransaction)
+admin.site.register(Favorites)

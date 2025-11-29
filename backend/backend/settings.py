@@ -1,6 +1,9 @@
 from pathlib import Path
 from datetime import timedelta
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -148,7 +151,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 8
 }
 
 SIMPLE_JWT = {
@@ -175,3 +178,5 @@ CORS_ALLOWED_ORIGINS = [
 ]   
 
 GOOGLE_CLIENT_ID = os.environ.get('CLIENT_ID')
+
+GEOAPI_KEY = os.environ.get('GEO_CODING')
