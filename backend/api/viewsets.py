@@ -3,6 +3,9 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from . import models
 from . import serializers
 from django.shortcuts import get_object_or_404
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
 
 class CustomUserViewSets(viewsets.ModelViewSet):
     '''
@@ -11,8 +14,32 @@ class CustomUserViewSets(viewsets.ModelViewSet):
     queryset = models.CustomUser.objects.all()
     serializer_class = serializers.UserSerializers
     lookup_field = 'user_id'
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+    
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def profile(self, request):
+        '''
+            this get current logged in user profile
+        '''
+        serializer = self.serializer_class(request.user)
+        return Response(serializer.data)
+    
+    def get_permissions(self):
+        # You can customize permissions per action
+        if self.action == 'retrieve' or self.action in ['update', 'partial_update', 'destroy']:
+            return [IsAuthenticated()]
+        # Disable create
+        if self.action == 'create':
+            from rest_framework.permissions import AllowAny
+            return [AllowAny()]  # Or raise exception
+        return super().get_permissions()
 
+    def create(self, request, *args, **kwargs):
+        # disable default create
+        from rest_framework.exceptions import MethodNotAllowed
+        raise MethodNotAllowed('POST')
+
+    
 class RoomViewSets(viewsets.ModelViewSet):
     '''
         View sets for room
@@ -24,6 +51,12 @@ class RoomViewSets(viewsets.ModelViewSet):
     serializer_class = serializers.RoomSerializer
     lookup_field = 'slug_name'
     permission_classes = [IsAuthenticated]
+    
+    def get_permissions(self):
+        if self.action == 'retrieve':
+            return [AllowAny()]
+        return super().get_permissions()
+
     
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -44,18 +77,29 @@ class RentViewSets(viewsets.ModelViewSet):
 
 
 class RentTransactionViewSets(viewsets.ModelViewSet):
-    queryset = models.RentTransaction.objects.all()
+    queryset = models.RentTransaction.objects.none()  # placeholder queryset
     serializer_class = serializers.RentTransactionSerializers
     lookup_field = 'transact_id'
     permission_classes = [IsAuthenticated]
-    
+
+    def get_queryset(self):
+        return models.RentTransaction.objects.filter(renter=self.request.user)
+
     def perform_create(self, serializer):
-        '''
-            you cannot test it using normal drf u need a jwt to test this.
-            this means that only the authenticated user can created it.
-        '''
-        rent = serializer.save(renter=self.request.user)
-        return rent
+        active_rent_exists = models.ActiveRent.objects.filter(
+            tenant=self.request.user,
+            status='Active'
+        ).exists()
+
+        if active_rent_exists:
+            from rest_framework.exceptions import ValidationError
+            raise ValidationError(
+                {"detail": "You already have an active rent. Please contact your current owner or move out before renting a new room."}
+            )
+
+        # Otherwise, create the transaction
+        serializer.save(renter=self.request.user)
+
 
 class ReportViewSests(viewsets.ModelViewSet):
     queryset = models.Reports.objects.all()
@@ -72,6 +116,15 @@ class ReportViewSests(viewsets.ModelViewSet):
         )
         return report
 
+
+class ActiveRentViewSets(viewsets.ModelViewSet):
+    queryset = models.ActiveRent.objects.none()  # placeholder queryset
+    serializer_class = serializers.ActiveRentSerializers
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        return models.ActiveRent.objects.filter(tenant=self.request.user)
+
 class FavoriteViewSets(viewsets.ModelViewSet):
     serializer_class = serializers.FavoriteSerializers
     
@@ -80,4 +133,17 @@ class FavoriteViewSets(viewsets.ModelViewSet):
     
     def get_queryset(self):
         data = models.Favorites.objects.filter(user=self.request.user)
+        return data
+
+
+class PaymentTransactionViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.PaymentHistorySerializer
+    queryset = models.RentPaymentHistory.objects.none()
+    permission_classes = [IsAuthenticated]
+    
+    def perform_create(self, serializer):
+        return serializer.save(renter=self.request.user)
+    
+    def get_queryset(self):
+        data = models.RentPaymentHistory.objects.filter(renter=self.request.user)
         return data

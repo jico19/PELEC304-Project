@@ -6,7 +6,8 @@ import Home from './pages/Home'
 import LiveMapView from './pages/LiveMapPage'
 import LandingPage from './pages/LandingPage'
 import RoomDetailPage from './pages/RoomDetailPage'
-
+import UserProfile from './pages/UserProfile'
+import ManageRent from './pages/ManageRent'
 import 'leaflet/dist/leaflet.css';
 
 
@@ -25,10 +26,22 @@ function App() {
             </ProtectedRoutes>
           } />
           <Route path='/live-map' element={
-              <LiveMapView />
+            <LiveMapView />
           } />
           <Route path='/room/:slug_name' element={
+            <ProtectedRoutes>
               <RoomDetailPage />
+            </ProtectedRoutes>
+          } />
+          <Route path='/profile/:user_id' element={
+            <ProtectedRoutes>
+              <UserProfile />
+            </ProtectedRoutes>
+          } />
+          <Route path='/manage/rent/:user_id' element={
+            <ProtectedRoutes>
+              <ManageRent />
+            </ProtectedRoutes>
           } />
         </Routes>
       </BrowserRouter>

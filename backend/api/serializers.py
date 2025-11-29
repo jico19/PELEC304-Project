@@ -8,9 +8,11 @@ class UserSerializers(serializers.ModelSerializer):
         model = models.CustomUser
         fields = [
             'user_id',
+            'id',
             'username',
             'password',
             'role',
+            'occupation_status',
             'email',
             'phone_number',
             'marital_status',
@@ -18,14 +20,16 @@ class UserSerializers(serializers.ModelSerializer):
             'permanent_address',
             'budget'
         ]
-        read_only_fields = ['role', 'budget']
+        read_only_fields = ['role', 'budget', 'id']
         extra_kwargs = {
-            "password": {"write_only":True}
+            "password": {"write_only": True},  # <-- make optional
         }
     
     def create(self, validated_data):
         user = models.CustomUser.objects.create_user(**validated_data)
         return user
+    
+
 
 class RoomSerializer(serializers.ModelSerializer):
     owner_name = serializers.SerializerMethodField()
@@ -66,17 +70,26 @@ class ReportSerializers(serializers.ModelSerializer):
 class ActiveRentSerializers(serializers.ModelSerializer):
     room_name = serializers.SerializerMethodField()
     tenant_name = serializers.SerializerMethodField()
+    room_lat = serializers.SerializerMethodField()
+    room_long = serializers.SerializerMethodField()
     
     class Meta:
         model = models.ActiveRent
         fields = '__all__'
-        read_only_fields = ['rent_id', 'room', 'tenant', 'start_date', 'due_date', 'rent_transaction', 'status', 'amount'] # -> add this later if not testing using drf ['room', 'tenant']
+        read_only_fields = ['rent_id', 'room','room_lat','room_long', 'tenant', 'start_date', 'due_date', 'rent_transaction', 'status', 'amount'] # -> add this later if not testing using drf ['room', 'tenant']
 
     def get_room_name(self, obj):
         return obj.room.name
 
     def get_tenant_name(self, obj):
         return obj.tenant.username
+    
+    def get_room_lat(self, obj):
+        return obj.room.lat
+
+    def get_room_long(self, obj):
+        return obj.room.long
+    
 
 class NotifcationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -86,15 +99,27 @@ class NotifcationSerializer(serializers.ModelSerializer):
 
 class RentTransactionSerializers(serializers.ModelSerializer):
     
-        
     room_name = serializers.SerializerMethodField()
+    room_address = serializers.SerializerMethodField()
+    room_lat = serializers.SerializerMethodField()
+    room_long = serializers.SerializerMethodField()
+    
     class Meta:
         model = models.RentTransaction
-        fields = ['id', 'transact_id', 'room','room_name']
+        fields = ['transact_id', 'room','room_name', 'room_address', 'room_lat', 'room_long']
         read_only_fields = ['id', 'renter'] 
 
     def get_room_name(self, obj):
         return f"{obj.room.name}"
+    
+    def get_room_address(self, obj):
+        return obj.room.address
+    
+    def get_room_lat(self, obj):
+        return obj.room.lat
+
+    def get_room_long(self, obj):
+        return obj.room.long
     
     def validate(self, attrs):
         '''
@@ -109,7 +134,7 @@ class RentTransactionSerializers(serializers.ModelSerializer):
             raise serializers.ValidationError({
                 "budget": "You budget is lower than the room price.."
             })
-        
+            
         # checks if room is avaiable
         if attrs['room'].room_availability != 'Available':
             raise serializers.ValidationError({
@@ -128,3 +153,26 @@ class FavoriteSerializers(serializers.ModelSerializer):
 
 class SearchRoomSerializers(serializers.Serializer):
     address = serializers.CharField()
+
+
+class PaymentHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.RentPaymentHistory
+        fields = ['room', 'amount', 'date_paid']
+        read_only_fields = ['renter', 'date_paid']
+    
+    def validate(self, attrs):
+        amount = attrs.get("amount")
+        if amount is None:
+            raise serializers.ValidationError({
+                "amount": "you have entered invalid amount"
+            })
+        
+        if not isinstance(amount, (int, float)):
+            raise serializers.ValidationError({"amount": "Amount must be a number."})
+
+        if amount <= 0:
+            raise serializers.ValidationError({"amount": "Amount must be greater than 0."})
+
+        
+        return attrs

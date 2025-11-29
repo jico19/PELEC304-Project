@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from . import models
 from django.shortcuts import get_object_or_404
 from django.core.cache import cache
+from .utils import send_welcome_email
 
 ''''
     TODO MAKE A SIGNALS FOR CREATING ACTIVE RENT
@@ -13,12 +14,13 @@ from django.core.cache import cache
 @receiver(post_save, sender=models.RentTransaction)
 def ActiveRentSignals(sender, instance, created, **kwargs ):
     if created:
+        room_instance = get_object_or_404(models.Room,room_id=instance.room.room_id)
         print(instance.renter)
         models.ActiveRent.objects.create(
             rent_transaction=instance,
             room=instance.room,
             tenant=instance.renter,
-            amount=instance.renter.budget,
+            amount=room_instance.price,
         )
         
         room_instance = get_object_or_404(models.Room,room_id=instance.room.room_id)
@@ -46,3 +48,9 @@ def invalidate_room_cache(**kwargs):
 
     '''
     cache.delete("all_room")
+
+
+@receiver([post_save], sender=models.CustomUser)
+def send_welcome_on_register(sender, instance, created, **kwargs):
+    if created:
+        send_welcome_email(username=instance.username, to_email=instance.email)
