@@ -1,51 +1,53 @@
 import axios from "axios";
 
-
-const access_token = localStorage.getItem('access_token')
-
 const api = axios.create({
-    baseURL: 'http://127.0.0.1:8000/api/',
-    headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${access_token}`
-    }
-})
+    baseURL: "http://127.0.0.1:8000/api",
+});
 
+api.interceptors.request.use((config) => {
+    const access = localStorage.getItem("access_token");
+    if (access) {
+        config.headers.Authorization = `Bearer ${access}`;
+    }
+    return config;
+});
 
 api.interceptors.response.use(
-    (res) => res,
-    async (err) => {
-        const origReq = err.config;
-        // Check if access token expired
-        if (err.response?.status === 401 && !origReq._retry) {
-            origReq._retry = true;
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config;
+        if (
+            error.response &&
+            error.response.status === 401 && // access token expired
+            !originalRequest._retry
+        ) {
+            originalRequest._retry = true;
 
-            const refresh_token = localStorage.getItem("refresh_token");
+            const refresh = localStorage.getItem('refresh_token')
+            if (!refresh) return Promise.reject(error);
+
             try {
-                // Get new access token
-                const res = await api.post("token/refresh/", {
-                    refresh: refresh_token,
-                });
+                const res = await axios.post(
+                    "http://127.0.0.1:8000/auth/token/refresh/",
+                    { refresh },
+                    { headers: { "Content-Type": "application/json" } }
+                );
 
-                const newAccess = res.data.access;
+                localStorage.setItem("access_token", res.data.access);
 
-                // Save new access token
-                localStorage.setItem("access_token", newAccess);
-                
-                // Update the request header and retry
-                origReq.headers.Authorization = `Bearer ${newAccess}`;
-
-                return api(origReq);
-            } catch (refreshErr) {
-                // refresh token also expired → logout
-                console.log(refreshErr)
-                localStorage.clear();
-                // window.location.href = "/";
+                originalRequest.headers.Authorization = `Bearer ${res.data.access}`;
+                return axios(originalRequest); // retry original request
+            } catch (err) {
+                // refresh token invalid or expired: logout user
+                localStorage.removeItem("access_token");
+                localStorage.removeItem("refresh_token");
+                window.location.href = "/login"; // redirect to login
+                return Promise.reject(err);
             }
         }
-        return Promise.reject(err);
+
+        return Promise.reject(error);
     }
 );
-
 
 export default api;

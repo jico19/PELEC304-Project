@@ -180,3 +180,11 @@ CORS_ALLOWED_ORIGINS = [
 GOOGLE_CLIENT_ID = os.environ.get('CLIENT_ID')
 
 GEOAPI_KEY = os.environ.get('GEO_CODING')
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Replace with your SMTP server address (e.g., 'smtp.gmail.com')
+EMAIL_PORT = 587  # Common port for TLS/STARTTLS (587) or SSL (465)
+EMAIL_USE_TLS = True  # Set to True for TLS/STARTTLS, False for SSL
+EMAIL_USE_SSL = False # Set to True for SSL, False for TLS/STARTTLS
+EMAIL_HOST_USER = os.environ.get('GMAIL_ACCOUNT')  # Your email address
+EMAIL_HOST_PASSWORD = os.environ.get('GOOGLE_APP_PASSOWRD') # Your email password or app-specific password
