@@ -51,6 +51,7 @@ class RentTransactionViewSets(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         '''
+            you cannot test it using normal drf u need a jwt to test this.
             this means that only the authenticated user can created it.
         '''
         rent = serializer.save(renter=self.request.user)

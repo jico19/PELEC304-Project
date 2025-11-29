@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -26,15 +27,16 @@ const Register = () => {
   const formSubmit = async (data) => {
     console.log(data);
     try {
-      const response = await api.post("user/", data);
+      const response = await axios.post("http://127.0.0.1:8000/api/user/", data);
       localStorage.setItem("access_token", response.data.access);
       localStorage.setItem("refresh_token", response.data.refresh);
-      toast.success("Login Successfully.");
-      // setTimeout(() => {
-      //   navigate("/home");
-      // }, 1000);
+      toast.success("Registered Successfully.");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
     } catch (error) {
       console.log(error);
+      toast.error("Registration Failed. Please try again.");
     }
   };
 

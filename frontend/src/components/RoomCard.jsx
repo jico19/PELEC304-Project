@@ -3,9 +3,60 @@ import CardImg from "../assets/landingpage/card_img.png";
 
 const necessities = ["Aircon", "CR", "Internet"];
 
-export const FullRoomCard = () => {
-  
+export const FullRoomCard = ({
+  image,
+  name,
+  address,
+  aircon,
+  comfortroom,
+  internet,
+  price,
+  handler,
+}) => {
+  return (
+    <div className="border-gray-400 shadow-md border rounded-xl">
+      <img src={image} alt={name} className="w-full h-auto rounded-t-xl" />
+      <div className="px-4 py-5 flex flex-col gap-2 bg-white rounded-b-xl">
+        <h1 className="text-md font-bold">{name}</h1>
+        <div className="flex items-center mb-6">
+          {" "}
+          <img
+            src="https://img.icons8.com/?size=100&id=3723&format=png&color=000000"
+            alt="Location"
+            className="w-5 h-5 mr-1"
+          />
+          <p className="text-gray-500">{address}</p>
+        </div>
+        <div className="flex gap-1 border-b-2 border-gray-300 pb-4">
+          <div className="flex items-center gap-1 bg-gray-200 px-2 py-1 rounded-full text-xs">
+            Aircon {aircon ? "✓" : "✗"}
+          </div>
+          <div className="flex items-center gap-1 bg-gray-200 px-2 py-1 rounded-full text-xs">
+              CR {comfortroom ? "✓" : "✗"}
+          </div>
+          <div className="flex items-center gap-1 bg-gray-200 px-2 py-1 rounded-full text-xs">
+            Internet {internet ? "✓" : "✗"}
+          </div>
+        </div>
 
+        <div className="flex w-full items-center gap-2 justify-around">
+          <div className="flex flex-col text-center">
+            <p className="text-2xl font-bold">
+              ₱{price}
+              <br />
+            </p>
+            <span className="text-xs font-normal">per month</span>
+          </div>
+          <button className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all w-3/5" onClick={handler}>
+            Rent Me
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const DummyFullRoomCard = () => {
   return (
     <div className="border-gray-400 shadow-md border rounded-xl">
       <img src={CardImg} alt="Room" className="w-full h-auto" />
@@ -24,7 +75,9 @@ export const FullRoomCard = () => {
         </div>
         <div className="flex gap-1 border-b-2 border-gray-300 pb-4">
           {necessities.map((e) => (
-            <div className="flex items-center gap-1 bg-gray-200 px-2 py-1 rounded-full text-xs">{e}</div>
+            <div className="flex items-center gap-1 bg-gray-200 px-2 py-1 rounded-full text-xs">
+              {e}
+            </div>
           ))}
         </div>
 
@@ -36,14 +89,14 @@ export const FullRoomCard = () => {
             </p>
             <span className="text-xs font-normal">per month</span>
           </div>
-          <button className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all w-3/5">View Details</button>
+          <button className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all w-3/5">
+            View Details
+          </button>
         </div>
       </div>
     </div>
   );
 };
-
-
 
 export const ImgRoomCard = () => {
   return (
@@ -62,23 +115,7 @@ export const ImgRoomCard = () => {
           />
           <p className="text-gray-500">Barangay Ibabang Dupay</p>
         </div>
-        <div className="flex gap-1 border-b-2 border-gray-300 pb-4">
-          {necessities.map((e) => (
-            <div className="flex items-center gap-1 bg-gray-200 px-2 py-1 rounded-full text-xs">{e}</div>
-          ))}
-        </div>
-
-        <div className="flex w-full items-center gap-2 justify-around">
-          <div className="flex flex-col text-center">
-            <p className="text-2xl font-bold">
-              ₱4,500
-              <br />
-            </p>
-            <span className="text-xs font-normal">per month</span>
-          </div>
-          <button className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all w-3/5">View Details</button>
-        </div>
       </div>
     </div>
-  )
-}
+  );
+};

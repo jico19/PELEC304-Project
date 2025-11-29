@@ -40,7 +40,7 @@ api.interceptors.response.use(
                 // refresh token also expired → logout
                 console.log(refreshErr)
                 localStorage.clear();
-                // window.location.href = "/";
+                window.location.href = "/";
             }
         }
         return Promise.reject(err);

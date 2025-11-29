@@ -1,6 +1,6 @@
 import React from "react";
 import NavBar from "src/components/NavBar";
-import { FullRoomCard } from "src/components/RoomCard";
+import { DummyFullRoomCard } from "src/components/RoomCard";
 import Footer from "src/components/Footer";
 
 import HeroImg from "../assets/landingpage/hero_img.png";
@@ -57,9 +57,9 @@ const LandingPage = () => {
         </p>
         {/* Card Container */}
         <div className="w-full lg:w-4/5 grid p-5 gap-6 mb-6 justify-items-center md:grid-cols-2 lg:grid-cols-3">
-          <RoomCard />
-          <RoomCard />
-          <RoomCard />
+          <DummyFullRoomCard />
+          <DummyFullRoomCard />
+          <DummyFullRoomCard />
         </div>
 
         <button className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all">

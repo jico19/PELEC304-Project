@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import NavBar from "src/components/NavBar";
 import Footer from "src/components/Footer";
+import { ImgRoomCard } from "src/components/RoomCard";
+
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -28,7 +30,7 @@ const LiveMapView = () => {
     <div className="w-full flex flex-col bg-white">
       <NavBar />
       <div className="relative h-screen flex justify-center items-center">
-        <div className="flex mt-20 mb-10  w-full md:w-8/9 h-8/9 rounded-2xl shadow-xl overflow-hidden z-0">
+        <div className="flex flex-col mt-20 mb-10 w-full md:w-8/9 h-8/9 rounded-2xl shadow-xl overflow-hidden z-0">
           <div className="fixed top-2.5 left-21 z-1000 ">
             <button
               onClick={() => {
@@ -37,7 +39,11 @@ const LiveMapView = () => {
               }}
               className="btn bg-white border-2 border-gray-300 p-2"
             >
-              <img src="https://img.icons8.com/?size=100&id=3720&format=png&color=000000" alt="filter" className="w-4 h-4" />
+              <img
+                src="https://img.icons8.com/?size=100&id=3720&format=png&color=000000"
+                alt="filter"
+                className="w-4 h-4"
+              />
             </button>
           </div>
           <MapContainer
@@ -72,6 +78,9 @@ const LiveMapView = () => {
               );
             })}
           </MapContainer>
+
+
+          {/* <div className="w-4/5 h-1/5 bg-red-600 absolute self-center bottom-50 z-100"></div> */}
         </div>
       </div>
       <Footer />

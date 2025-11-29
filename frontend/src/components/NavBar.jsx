@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import api from "src/utils/Api";
+import Logo from "src/assets/LOGO.png";
+
 const NavBar = () => {
   const navigate = useNavigate();
 
@@ -72,12 +74,12 @@ const NavBar = () => {
               </li>
             </ul>
           </div>
-          <a className="btn btn-ghost text-xl">LCBNB</a>
+          <a className=" hover:shadow-none btn btn-soft bg-white text-black border-none text-xl"><img src={Logo} alt="LCBNB Logo" className="inline w-13 h-13" />LCBNB</a>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1 flex gap-2">
             <button
-              onClick={() => navigate("/home")}
+              onClick={() => navigate("/")}
               className="p-2 hover:bg-black hover:text-white transition-all rounded"
             >
               Home

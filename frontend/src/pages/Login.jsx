@@ -27,6 +27,7 @@ const Login = () => {
       },1000)
     } catch (error) {
       console.log(error)
+      toast.error('Login Failed. Please check your credentials.')
     }
   };
 
