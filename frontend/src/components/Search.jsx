@@ -1,8 +1,8 @@
 import React from "react";
 
-const Search = () => {
+const Search = ({ isSearchCollapsed }) => {
   return (
-    <div className="bg-gray-200 flex flex-row p-5 rounded-full w-full z-10 items-center md:w-4/5 lg:w-2/5">
+    <div className={` bg-gray-200 flex flex-row p-5 rounded-full w-full z-10 items-center md:w-4/5 lg:w-4/5 xl:w-3/5 animate-fadeIn transition-all duration-500 ease-in-out self-center ${isSearchCollapsed ? "scale-95" : "scale-100"}`}>
       <img
         src="https://img.icons8.com/?size=100&id=3723&format=png&color=000000"
         alt="Location"

@@ -36,12 +36,20 @@ class RoomSerializer(serializers.ModelSerializer):
         read_only_fields = ['owner']
         
     def validate(self, attrs):
-        user = self.context['request'].user
-        
-        if not user.role:
-            raise serializers.ValidationError({
-                "message": "You don't have the permision to perform this action."
-            }) 
+        # Only validate if this is a write operation (create/update)
+        request = self.context.get('request')
+        if request and request.method in ['POST', 'PUT', 'PATCH']:
+            user = request.user
+            
+            if user.is_anonymous:
+                raise serializers.ValidationError({
+                    "message": "You must be authenticated to perform this action."
+                })
+            
+            if not user.role or user.role != 'Landlord':
+                raise serializers.ValidationError({
+                    "message": "You don't have permission to perform this action. Only landlords can create/edit rooms."
+                }) 
             
         return attrs
     

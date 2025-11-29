@@ -9,9 +9,9 @@ const Pagination = ({ count, limit, page, onPageChange }) => {
     const renderPageButton = (p) => (
         <button
             key={p}
-            className={`px-3 py-1 rounded border ${
+            className={`px-3 btn py-1 rounded border ${
                 page === p
-                    ? "bg-blue-600 text-white border-blue-600"
+                    ? "bg-black text-white border-black"
                     : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
             }`}
             onClick={() => onPageChange(p)}
@@ -23,7 +23,7 @@ const Pagination = ({ count, limit, page, onPageChange }) => {
     return (
         <div className="flex justify-end flex-wrap gap-2 mt-6">
             <button
-                className={`px-3 py-1 rounded border bg-white text-gray-700 border-gray-300 hover:bg-gray-100 ${
+                className={`px-3 btn py-1 rounded border bg-white text-gray-700 border-gray-300 hover:bg-gray-100 ${
                     page === 1 ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 onClick={() => page > 1 && onPageChange(page - 1)}
@@ -47,7 +47,7 @@ const Pagination = ({ count, limit, page, onPageChange }) => {
                     return (
                         <span
                             key={p}
-                            className="px-3 py-1 rounded border bg-gray-100 text-gray-400 cursor-default"
+                            className="px-3 btn border-gray-300 py-1 rounded border bg-gray-100 text-gray-400 cursor-default"
                         >
                             ...
                         </span>
@@ -57,7 +57,7 @@ const Pagination = ({ count, limit, page, onPageChange }) => {
             })}
 
             <button
-                className={`px-3 py-1 rounded border bg-white text-gray-700 border-gray-300 hover:bg-gray-100 ${
+                className={`px-3 py-1 btn rounded border bg-white text-gray-700 border-gray-300 hover:bg-gray-100 ${
                     page === totalPages ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 onClick={() => page < totalPages && onPageChange(page + 1)}

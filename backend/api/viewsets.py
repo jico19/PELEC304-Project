@@ -23,7 +23,7 @@ class RoomViewSets(viewsets.ModelViewSet):
     queryset = models.Room.objects.all()
     serializer_class = serializers.RoomSerializer
     lookup_field = 'slug_name'
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

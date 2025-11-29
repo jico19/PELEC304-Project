@@ -6,6 +6,7 @@ import HeroImg from "../assets/landingpage/hero_img.png";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const LandingPage = () => {
   const [search, setSearch] = useState("")
@@ -21,8 +22,7 @@ const LandingPage = () => {
       console.log(res.data.rooms)
       // checks the data if its empty to not redirect
       if (res.data.rooms.length <= 0){
-        // prolly add a toast here.. to make the user 
-        // know that the ther's no room existing
+        toast.error("No rentals found for the given location.", {position: "bottom-center"})
         return
       }
 
@@ -39,7 +39,7 @@ const LandingPage = () => {
       <NavBar />
 
       <section
-        className="w-full flex flex-col justify-center items-center py-70 px-10 gap-6 relative text-white"
+        className="animate-fadeIn w-full flex flex-col justify-center items-center py-70 px-10 gap-6 relative text-white"
         style={{
           backgroundImage: `url(${HeroImg})`,
           backgroundSize: "cover",
@@ -73,6 +73,9 @@ const LandingPage = () => {
             className="select bg-white border-2 border-gray-300 px-4 py-2 text-black rounded-r-full focus:outline-none"
           >
             <option disabled={true}>All Types</option>
+            <option>Boarding House</option>
+            <option>Apartment</option>
+            <option>Dorm</option>
           </select>
           <button 
             className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all rounded-full ml-3"
@@ -83,24 +86,24 @@ const LandingPage = () => {
         </div>
       </section>
 
-      <section className=" w-full py-30 px-10 flex flex-col items-center bg-white">
+      <section className="animate-fadeIn w-full py-30 px-10 flex flex-col items-center bg-white">
         <h1 className="text-3xl font-bold mb-2">Featured Rentals</h1>
         <p className="text-sm text-gray-500 mb-2">
           Discover our hand picked of the best rentals in Lucena City.
         </p>
-        {/* Card Container */}
+
         <div className="w-full lg:w-4/5 grid p-5 gap-6 mb-6 justify-items-center md:grid-cols-2 lg:grid-cols-3">
           <DummyFullRoomCard />
           <DummyFullRoomCard />
           <DummyFullRoomCard />
         </div>
 
-        <button className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all">
+        <button className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all" onClick={() => navigate('/login')}>
           View All Rentals
         </button>
       </section>
 
-      <section className=" w-full py-30 px-10 flex flex-col items-center bg-white">
+      <section className=" animate-fadeIn w-full py-30 px-10 flex flex-col items-center bg-white">
         <h1 className="text-3xl font-bold mb-2">How LCBNB Works</h1>
         <p className="text-sm text-gray-500 mb-10">
           Finding your perfect rental is just three steps away
@@ -140,7 +143,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      <section className=" w-full py-30 px-10 flex flex-col items-center text-white bg-gray-700">
+      <section className="animate-fadeIn w-full py-30 px-10 flex flex-col items-center text-white bg-gray-700">
         <h1 className="text-3xl font-bold mb-2">
           Own a Property in Lucena City?
         </h1>
