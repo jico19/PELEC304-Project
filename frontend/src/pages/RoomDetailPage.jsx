@@ -5,12 +5,14 @@ import api from "src/utils/Api";
 import { useEffect, useState } from "react";
 import { MapPinIcon, Calendar } from "lucide-react";
 import { useProfile } from "src/store/useProfile";
+import { useToast } from "src/store/useToast";
 
 const RoomDetailPage = () => {
     const { slug_name } = useParams();
     const [room, setRoom] = useState(null);
     const { profile, fetchUserProfile } = useProfile()
     const [change, setChange] = useState(false)
+    const { success, error, loading } = useToast();
 
     // if user has one it cannot rent anymore must have yknow delete the rent or move out to rent a new.
 
@@ -21,8 +23,9 @@ const RoomDetailPage = () => {
             })
             console.log(res.data)
             setChange(true)
-        } catch (error) {
-            console.log(error.response.data)
+        } catch (err) {
+            console.log(err.response.data)
+            error(err.response.data.detail)
         }
     }
 

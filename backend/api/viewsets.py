@@ -25,19 +25,16 @@ class CustomUserViewSets(viewsets.ModelViewSet):
         return Response(serializer.data)
     
     def get_permissions(self):
-        # You can customize permissions per action
-        if self.action == 'retrieve' or self.action in ['update', 'partial_update', 'destroy']:
-            return [IsAuthenticated()]
-        # Disable create
         if self.action == 'create':
-            from rest_framework.permissions import AllowAny
-            return [AllowAny()]  # Or raise exception
+            return [AllowAny()] 
+        elif self.action == 'retrieve' or self.action in ['update', 'partial_update', 'destroy']:
+            return [IsAuthenticated()]
         return super().get_permissions()
 
     def create(self, request, *args, **kwargs):
-        # disable default create
-        from rest_framework.exceptions import MethodNotAllowed
-        raise MethodNotAllowed('POST')
+        print(request.data)
+        return super().create(request, *args, **kwargs)
+    
 
     
 class RoomViewSets(viewsets.ModelViewSet):

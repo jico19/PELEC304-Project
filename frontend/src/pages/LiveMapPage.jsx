@@ -13,7 +13,7 @@ const LiveMapView = () => {
   const [rentals, setRentals] = useState([]);
   const location = useLocation();
   const [selectedRental, setSelectedRental] = useState(null);
-  const [showCard, setShowCard] = useState(false); // <-- FIX for animation mount/unmount
+  const [showCard, setShowCard] = useState(false);
   const cardRef = useRef(null);
 
   const navigate = useNavigate()

@@ -54,3 +54,12 @@ def invalidate_room_cache(**kwargs):
 def send_welcome_on_register(sender, instance, created, **kwargs):
     if created:
         send_welcome_email(username=instance.username, to_email=instance.email)
+
+@receiver([post_save], sender=models.Reports)
+def sends_notifacation_report(sender, instance, created, **kwargs):
+    if created:
+        models.Notification.objects.create(
+            renter=instance.reporter,
+            sender=instance.room.owner,
+            content=instance.content
+        )

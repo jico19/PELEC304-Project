@@ -8,7 +8,10 @@ import LandingPage from './pages/LandingPage'
 import RoomDetailPage from './pages/RoomDetailPage'
 import UserProfile from './pages/UserProfile'
 import ManageRent from './pages/ManageRent'
+import SubmitReport from './pages/SubmitReport'
 import 'leaflet/dist/leaflet.css';
+import Recomendataions from './pages/Recomendataions'
+import { Toaster } from "react-hot-toast";
 
 
 function App() {
@@ -43,8 +46,19 @@ function App() {
               <ManageRent />
             </ProtectedRoutes>
           } />
+          <Route path='/submit-report' element={
+            <ProtectedRoutes>
+              <SubmitReport />
+            </ProtectedRoutes>
+          } />
+          <Route path='/room/recomendation' element={
+            <ProtectedRoutes>
+              <Recomendataions />
+            </ProtectedRoutes>
+          } />
         </Routes>
       </BrowserRouter>
+      <Toaster position="bottom-right" reverseOrder={false} />
     </div>
   )
 }
