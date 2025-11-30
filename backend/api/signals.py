@@ -11,10 +11,13 @@ from .utils import send_welcome_email
 ''''
     TODO MAKE A SIGNALS FOR CREATING ACTIVE RENT
 '''
+
+
 @receiver(post_save, sender=models.RentTransaction)
-def ActiveRentSignals(sender, instance, created, **kwargs ):
+def ActiveRentSignals(sender, instance, created, **kwargs):
     if created:
-        room_instance = get_object_or_404(models.Room,room_id=instance.room.room_id)
+        room_instance = get_object_or_404(
+            models.Room, room_id=instance.room.room_id)
         print(instance.renter)
         models.ActiveRent.objects.create(
             rent_transaction=instance,
@@ -22,23 +25,12 @@ def ActiveRentSignals(sender, instance, created, **kwargs ):
             tenant=instance.renter,
             amount=room_instance.price,
         )
-        
-        room_instance = get_object_or_404(models.Room,room_id=instance.room.room_id)
+
+        room_instance = get_object_or_404(
+            models.Room, room_id=instance.room.room_id)
         if room_instance.room_availability == 'Available':
             room_instance.room_availability = 'Not Available'
             room_instance.save()
-
-@receiver(post_delete, sender=models.RentTransaction)
-def change_to_available(sender, instance,**kwargs):
-    '''
-        Change the room status into avaiable once the client is not renter 
-        like if the transatcion is delete or something.
-    '''
-    room_instance = get_object_or_404(models.Room, room_id=instance.room.room_id)
-    if room_instance.room_availability == 'Not Available':
-        room_instance.room_availability = 'Available'
-        print(room_instance.room_availability)
-        room_instance.save()
 
 @receiver([post_save, post_delete], sender=models.RentTransaction)
 def invalidate_room_cache(**kwargs):
@@ -55,6 +47,7 @@ def send_welcome_on_register(sender, instance, created, **kwargs):
     if created:
         send_welcome_email(username=instance.username, to_email=instance.email)
 
+
 @receiver([post_save], sender=models.Reports)
 def sends_notifacation_report(sender, instance, created, **kwargs):
     if created:
@@ -63,3 +56,19 @@ def sends_notifacation_report(sender, instance, created, **kwargs):
             sender=instance.room.owner,
             content=instance.content
         )
+
+
+@receiver([post_delete], sender=models.ActiveRent)
+def send_notification_move_out(sender, instance, **kwargs):
+    models.Notification.objects.create(
+        renter=instance.tenant,
+        sender=instance.room.owner,
+        content=f"{instance.tenant.get_full_name()} is no longer renting {instance.room.name}."
+    )
+    # change the room availability to available if not change itt to not available
+    room_instance = get_object_or_404(
+    models.Room, room_id=instance.room.room_id)
+    if room_instance.room_availability == 'Not Available':
+        room_instance.room_availability = 'Available'
+        print(room_instance.room_availability)
+        room_instance.save()

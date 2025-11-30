@@ -1,154 +1,100 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { MapPin } from "lucide-react";
+
 import NavBar from "src/components/NavBar";
-import RoomCard from "src/components/RoomCard";
 import Footer from "src/components/Footer";
 import HeroImg from "../assets/landingpage/hero_img.png";
-import { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useToast } from "src/store/useToast";
 
 const LandingPage = () => {
-  const [search, setSearch] = useState("")
-  const navigate = useNavigate()
+  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
+  const { error } = useToast();
 
-  const SearchHandler = async () => {
+  const handleSearch = async () => {
+    if (!search) return;
+
     try {
-      if (!search) return // prevents from using search if no input
+      const res = await axios.post("http://127.0.0.1:8000/api/room/search/", { address: search });
 
-      const res = await axios.post('http://127.0.0.1:8000/api/room/search/', {
-        "address": search
-      })
-      console.log(res.data.rooms)
-      // checks the data if its empty to not redirect
-      if (res.data.rooms.length <= 0){
-        // prolly add a toast here.. to make the user 
-        // know that the ther's no room existing
-        return
+      if (res.data.results.length === 0) {
+        error("Oops! We couldn’t find anything matching your search.");
+        setSearch("");
+        return;
       }
 
-      navigate('/live-map', {state: res.data.rooms})
-    } catch (error) {
-      console.log(error)
+      navigate("/live-map", { state: res.data.results });
+    } catch (err) {
+      console.error(err);
+      error("Oops! Something went wrong. Please try again.");
     }
-  }
+  };
 
-
+  const steps = [
+    { number: 1, title: "Search", desc: "Browse through hundreds of verified listings or use our map view to find rentals near you." },
+    { number: 2, title: "Book", desc: "Click rent room, and then you're good to go!" },
+    { number: 3, title: "Stay", desc: "Move in and enjoy your new home with peace of mind." },
+  ];
 
   return (
-    <div className="w-full flex flex-col bg-gray-200">
+    <div className="flex flex-col w-full min-h-screen bg-gray-50">
       <NavBar />
 
+      {/* Hero Section */}
       <section
-        className="w-full flex flex-col justify-center items-center py-70 px-10 gap-6 relative text-white"
+        className="relative flex flex-col items-center justify-center text-center py-28 px-6 md:px-20 gap-6 text-white"
         style={{
           backgroundImage: `url(${HeroImg})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
-        <div className="absolute inset-0 bg-black opacity-20"></div>
-        <h1 className="text-5xl font-bold text-center">
+        <div className="absolute inset-0 bg-slate-900/50"></div>
+        <h1 className="relative z-10 text-5xl md:text-6xl font-bold text-indigo-50">
           Find Your Home in Lucena City
         </h1>
-        <p className="text-center">
-          Find Your Home in Lucena City Dicover the perfect boarding house,
-          dormitory, apartment, or hotel for students, OFWs, and professionals
-          in Lucena City.
+        <p className="relative z-10 max-w-2xl text-lg md:text-xl text-gray-200">
+          Discover the perfect boarding house, dormitory, apartment, or hotel for students, OFWs, and professionals.
         </p>
-        <div className="bg-white flex flex-row p-5 rounded-full w-full z-10 items-center md:w-4/5 lg:w-2/5">
-          <img
-            src="https://img.icons8.com/?size=100&id=3723&format=png&color=000000"
-            alt="Location"
-            className="w-5 h-5 mr-2"
-          />
+
+        <div className="relative z-10 mt-8 flex w-full max-w-2xl items-center rounded-full bg-white p-4 shadow-md">
+          <MapPin className="w-6 h-6 text-indigo-500 mr-3" />
           <input
             type="text"
-            className="border border-gray-300 rounded-l-full px-4 py-2 w-full text-black focus:outline-none"
             placeholder="Barangay, landmark, or area..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            className="flex-1 rounded-l-full border-none px-4 py-2 focus:outline-none text-gray-800"
           />
-          <select
-            defaultValue="All Types"
-            className="select bg-white border-2 border-gray-300 px-4 py-2 text-black rounded-r-full focus:outline-none"
-          >
-            <option disabled={true}>All Types</option>
-          </select>
-          <button 
-            className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all rounded-full ml-3"
-            onClick={SearchHandler}
+          <button
+            onClick={handleSearch}
+            className="rounded-r-full bg-green-500 px-6 py-2 text-white font-semibold hover:bg-green-400 transition"
           >
             Search
           </button>
         </div>
       </section>
 
-      <section className=" w-full py-30 px-10 flex flex-col items-center bg-white">
-        <h1 className="text-3xl font-bold mb-2">Featured Rentals</h1>
-        <p className="text-sm text-gray-500 mb-2">
-          Discover our hand picked of the best rentals in Lucena City.
-        </p>
-        {/* Card Container */}
-        <div className="w-full lg:w-4/5 grid p-5 gap-6 mb-6 justify-items-center md:grid-cols-2 lg:grid-cols-3">
-          <RoomCard />
-          <RoomCard />
-          <RoomCard />
-        </div>
-
-        <button className="btn btn-neutral hover:bg-white hover:text-black hover:scale-95 transition-all">
-          View All Rentals
-        </button>
-      </section>
-
-      <section className=" w-full py-30 px-10 flex flex-col items-center bg-white">
-        <h1 className="text-3xl font-bold mb-2">How LCBNB Works</h1>
-        <p className="text-sm text-gray-500 mb-10">
+      {/* How It Works */}
+      <section className="flex flex-col items-center bg-white py-24 px-6">
+        <h2 className="text-3xl font-bold mb-4 text-slate-900">How LCBNB Works</h2>
+        <p className="text-gray-500 mb-12 text-center max-w-2xl">
           Finding your perfect rental is just three steps away
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 w-3/5 gap-10">
-          <div className="flex flex-col items-center">
-            <div className="w-13 h-13 flex justify-center items-center text-xl font-bold rounded-full border-2 border-gray-300 shadow mb-2">
-              1
-            </div>
-            <h1 className="text-xl font-bold mb-5">Search</h1>
-            <p className="text-gray-500 text-center">
-              Browse through hundreds of verified listings or use our map view
-              to find rentals near you.
-            </p>
-          </div>
 
-          <div className="flex flex-col items-center">
-            <div className="w-13 h-13 flex justify-center items-center text-xl font-bold rounded-full border-2 border-gray-300 shadow mb-2">
-              2
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full max-w-5xl">
+          {steps.map((step) => (
+            <div key={step.number} className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-xl shadow hover:shadow-lg transition">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-indigo-500 text-indigo-500 font-bold text-xl mb-4">
+                {step.number}
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-slate-800">{step.title}</h3>
+              <p className="text-gray-600">{step.desc}</p>
             </div>
-            <h1 className="text-xl font-bold mb-5">Book</h1>
-            <p className="text-gray-500 text-center">
-              Click rent room, and then your good to go!
-            </p>
-          </div>
-
-          <div className="flex flex-col items-center">
-            <div className="w-13 h-13 flex justify-center items-center text-xl font-bold rounded-full border-2 border-gray-300 shadow mb-2">
-              3
-            </div>
-            <h1 className="text-xl font-bold mb-5">Stay</h1>
-            <p className="text-gray-500 text-center">
-              Move in and enjoy your new home with peace of mind.
-            </p>
-          </div>
+          ))}
         </div>
-      </section>
-
-      <section className=" w-full py-30 px-10 flex flex-col items-center text-white bg-gray-700">
-        <h1 className="text-3xl font-bold mb-2">
-          Own a Property in Lucena City?
-        </h1>
-        <p className="text-sm text-gray-300 mb-10">
-          Join LCBNB and connect with thousands of potential tenants. List your
-          property for free and start earning today.
-        </p>
-
-        <button className="btn border-none hover:scale-95 transition-all bg-white text-black text-xl px-10 py-7 rounded-lg">List your Property Now </button>
       </section>
 
       <Footer />

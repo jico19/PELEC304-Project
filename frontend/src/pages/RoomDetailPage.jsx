@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { MapPinIcon, Calendar } from "lucide-react";
 import { useProfile } from "src/store/useProfile";
 import { useToast } from "src/store/useToast";
+import toast from "react-hot-toast";
 
 const RoomDetailPage = () => {
     const { slug_name } = useParams();
@@ -18,17 +19,33 @@ const RoomDetailPage = () => {
 
     const RentHandler = async () => {
         try {
-            const res = await api.post('transaction/', {
-                "room": room.id
-            })
-            console.log(res.data)
-            setChange(true)
-        } catch (err) {
-            console.log(err.response.data)
-            error(err.response.data.detail)
-        }
-    }
+            await toast.promise(
+                new Promise(async (resolve, reject) => {
+                    try {
+                        const response = await api.post('transaction/', {
+                            room: room.id
+                        });
 
+                        // optional: delay a bit to let user see "Processing..."
+                        setTimeout(() => resolve(response), 1050); // 0.8s delay
+
+                    } catch (err) {
+                        reject(err);
+                    }
+                }),
+                {
+                    loading: `Processing rental for ${room.name}...`,
+                    success: `Successfully rented ${room.name}! Enjoy your stay.`,
+                    error: (err) => `Failed to rent ${room.name}: ${err.response?.data?.detail || "Please try again."}`
+                }
+            );
+
+            setChange(true);
+        } catch (err) {
+            console.log(err.response?.data);
+            toast.error(err.response?.data?.detail || "Something went wrong.");
+        }
+    };
 
     useEffect(() => {
         const fetchRoom = async () => {
@@ -141,7 +158,7 @@ const RoomDetailPage = () => {
         ${room.room_availability === 'Available'
                                             ? 'bg-green-600 text-white hover:opacity-90'
                                             : 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                                        }`} 
+                                        }`}
                                 >
                                     Rent
                                 </button>
