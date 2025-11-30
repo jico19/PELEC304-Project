@@ -1,7 +1,7 @@
 import NavBar from "src/components/NavBar";
 import Footer from "src/components/Footer";
-import { ArrowLeft, Home, Calendar, Bell, CreditCard, MessageSquare } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ArrowLeft, Home, Calendar, Bell, CreditCard, MessageSquare, Bed, CheckCircle, XCircle, DollarSign, Calendar1Icon, Clock, LogOut} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useActiveRent } from "src/store/useActiveRent";
 import api from "src/utils/Api";
@@ -9,6 +9,8 @@ import api from "src/utils/Api";
 const ManageRent = () => {
     const { activeRent, fetchActiveRent } = useActiveRent();
     const [paymentHist, setPaymentHist] = useState([]);
+    const navigate = useNavigate()
+
 
     useEffect(() => {
         const getPaymentHistory = async () => {
@@ -60,53 +62,65 @@ const ManageRent = () => {
                                 <p className="text-gray-600">Here's everything you need to manage your rented space</p>
                             </div>
                             <div className="hidden md:flex items-center gap-2">
-                                <button className="flex items-center border border-gray-300 rounded px-3 py-1 hover:bg-gray-100">
+                                <button 
+                                    className="flex items-center border border-gray-300 rounded px-3 py-1 hover:bg-gray-100"
+                                    onClick={() => navigate('/submit-report')}
+                                >
                                     <Bell className="w-4 h-4 mr-2" /> Report
                                 </button>
                             </div>
                         </div>
                     </div>
                     {/* Rent Overview */}
-                    <div className="bg-gradient-to-br from-indigo-100 to-purple-100 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 mb-6 animate-fade-in">
-                        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                            {/* Left: Icon + Title */}
-                            <div className="flex items-center gap-4">
-                                <CreditCard className="w-10 h-10 text-indigo-600 animate-pulse" />
-                                <div>
-                                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Rent Overview</h2>
-                                    <p className="text-gray-500 mt-1">Your current payment status</p>
-                                </div>
-                            </div>
+                    <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-                            {/* Right: Button */}
-                            <button
-                                onClick={PaymentHandler}
-                                className="mt-3 md:mt-0 px-6 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-medium transition-colors shadow-lg transform hover:-translate-y-1 hover:scale-105"
-                            >
-                                Pay Now
-                            </button>
+                        {/* 1. Monthly Rent Card */}
+                        <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-md 
+                    hover:shadow-lg transition duration-300 transform hover:translate-y-[-2px]">
+                            <div className="flex items-start justify-between mb-2">
+                                <p className="text-sm font-medium text-gray-500">Monthly Rent</p>
+                                <DollarSign className="w-5 h-5 text-green-600" />
+                            </div>
+                            <p className="text-3xl font-extrabold text-gray-900">${currentRent}</p>
                         </div>
 
-                        {/* Info Grid */}
-                        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <div className="bg-white rounded-xl p-4 shadow hover:shadow-lg transition transform hover:-translate-y-1">
-                                <p className="text-gray-500 text-sm">Monthly Rent</p>
-                                <p className="text-xl font-bold text-indigo-700">${currentRent}</p>
+                        {/* 2. Due Date Card */}
+                        <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-md 
+                    hover:shadow-lg transition duration-300 transform hover:translate-y-[-2px]">
+                            <div className="flex items-start justify-between mb-2">
+                                <p className="text-sm font-medium text-gray-500">Due Date</p>
+                                <Calendar className="w-5 h-5 text-indigo-600" />
                             </div>
-                            <div className="bg-white rounded-xl p-4 shadow hover:shadow-lg transition transform hover:-translate-y-1">
-                                <p className="text-gray-500 text-sm">Due Date</p>
-                                <p className="text-xl font-bold text-indigo-700">{dueDate}</p>
+                            <p className="text-3xl font-extrabold text-gray-900">{dueDate}</p>
+                        </div>
+
+                        {/* 3. Days Until Due Card */}
+                        <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-md 
+                    hover:shadow-lg transition duration-300 transform hover:translate-y-[-2px]">
+                            <div className="flex items-start justify-between mb-2">
+                                <p className="text-sm font-medium text-gray-500">Days Until Due</p>
+                                <Clock className="w-5 h-5 text-yellow-500" />
                             </div>
-                            <div className="bg-white rounded-xl p-4 shadow hover:shadow-lg transition transform hover:-translate-y-1">
-                                <p className="text-gray-500 text-sm">Days Until Due</p>
-                                <p className="text-xl font-bold text-indigo-700">{daysUntilDue} day{daysUntilDue !== 1 ? "s" : ""}</p>
+                            <p className="text-3xl font-extrabold text-gray-900">
+                                {daysUntilDue} <span className="text-xl font-semibold text-gray-600">day{daysUntilDue !== 1 ? "s" : ""}</span>
+                            </p>
+                        </div>
+
+                        {/* 4. Status Card */}
+                        <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-md 
+                    hover:shadow-lg transition duration-300 transform hover:translate-y-[-2px]">
+                            <div className="flex items-start justify-between mb-2">
+                                <p className="text-sm font-medium text-gray-500">Status</p>
+                                <CheckCircle className="w-5 h-5 text-blue-500" />
                             </div>
-                            <div className="bg-white rounded-xl p-4 shadow hover:shadow-lg transition transform hover:-translate-y-1">
-                                <p className="text-gray-500 text-sm">Status</p>
-                                <span className={`px-3 py-1 rounded-full text-sm font-medium ${activeRent.status === 'Paid' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                    {activeRent.status || "N/A"}
-                                </span>
-                            </div>
+
+                            {/* Enhanced Status Pill */}
+                            <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-base font-semibold ${activeRent.status === 'Paid'
+                                ? 'bg-green-100 text-green-800 ring-1 ring-green-600'
+                                : 'bg-red-100 text-red-800 ring-1 ring-red-600'
+                                }`}>
+                                {activeRent.status || "N/A"}
+                            </span>
                         </div>
                     </div>
 
@@ -146,16 +160,77 @@ const ManageRent = () => {
                             </div>
                         </div>
 
-                        {/* Your Room */}
-                        <div className="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition transform hover:-translate-y-1 animate-fade-in">
-                            <div className="flex items-center gap-2 mb-4">
-                                <Home className="w-5 h-5 text-indigo-600" />
-                                <h3 className="text-lg font-semibold">Your Room</h3>
+                        <div className="bg-white rounded-xl p-6 shadow-xl border border-gray-100 
+                hover:shadow-2xl transition duration-300 ease-in-out 
+                transform hover:scale-[1.02] hover:-translate-y-0.5">
+
+                            {/* Card Header and Icon (Unchanged) */}
+                            <div className="flex items-center gap-3 mb-4 border-b pb-3">
+                                <Home className="w-6 h-6 text-indigo-700" /> {/* Main Home Icon */}
+                                <h3 className="text-xl font-bold text-gray-800">Your Room</h3>
                             </div>
-                            <p className="text-gray-500 text-sm">Property</p>
-                            <p className="font-semibold">{activeRent.room_name || "N/A"}</p>
-                            <p className="text-gray-500 text-sm mt-2">Status</p>
-                            <p className="font-semibold">{activeRent.status || "N/A"}</p>
+
+                            {/* Property Details Grid (Unchanged) */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-4 mb-6">
+                                {/* ... (Room Name and Status details here) ... */}
+
+                                {/* Room Name / Property */}
+                                <div className="flex flex-col">
+                                    <p className="text-sm font-medium text-gray-500 flex items-center gap-1">
+                                        <Bed className="w-4 h-4 text-gray-400" /> Property
+                                    </p>
+                                    <p className="text-base font-semibold text-gray-900 truncate">
+                                        {activeRent.room_name || "N/A"}
+                                    </p>
+                                </div>
+
+                                {/* Status */}
+                                <div className="flex flex-col">
+                                    <p className="text-sm font-medium text-gray-500 flex items-center gap-1">
+                                        {activeRent.status === 'Active' ? (
+                                            <CheckCircle className="w-4 h-4 text-green-600" />
+                                        ) : (
+                                            <XCircle className="w-4 h-4 text-red-500" />
+                                        )}
+                                        Status
+                                    </p>
+                                    <p className={`text-base font-semibold ${activeRent.status === 'Active' ? 'text-green-600' : 'text-red-500'}`}>
+                                        {activeRent.status || "N/A"}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* --- REDESIGNED ACTION BUTTONS --- */}
+                            <div className="flex justify-between gap-3 mt-4">
+
+                                {/* 1. Secondary Button: Move out (Outline/Ghost Style, Red for warning) */}
+                                <button
+                                    className="w-1/2 py-2 px-3 flex items-center justify-center gap-1.5 
+                       text-sm font-medium rounded-lg 
+                       text-red-600 border border-red-600 
+                       hover:bg-red-50 hover:shadow-inner 
+                       transition duration-150 ease-in-out"
+                                >
+                                    {/* Assuming LogOut icon is available */}
+                                    <LogOut className="w-4 h-4" />
+                                    Move out
+                                </button>
+
+                                {/* 2. Primary Button: Pay rent (Solid Style, Indigo for primary action) */}
+                                <button
+                                    className="w-1/2 py-2 px-3 flex items-center justify-center gap-1.5 
+                                    text-sm font-semibold 
+                                    bg-indigo-600 text-white rounded-lg shadow-md 
+                                    hover:bg-indigo-700 hover:shadow-lg 
+                                    focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 
+                                    transition duration-150 ease-in-out"
+                                    onClick={PaymentHandler}
+                                >
+                                    {/* Assuming CreditCard icon is available */}
+                                    <CreditCard className="w-4 h-4" />
+                                    Pay rent
+                                </button>
+                            </div>
                         </div>
 
                     </div>

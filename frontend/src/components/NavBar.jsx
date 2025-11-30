@@ -3,12 +3,14 @@ import { Menu } from "lucide-react";
 import { useProfile } from "src/store/useProfile";
 import { useEffect, useState } from "react";
 import api from "src/utils/Api";
+import { useToast } from "src/store/useToast";
 
 const NavBar = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("access_token");
   const { profile, fetchUserProfile } = useProfile();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { success, error, loading } = useToast();
 
   useEffect(() => {
     if (!profile?.user_id && token) fetchUserProfile();
@@ -19,18 +21,29 @@ const NavBar = () => {
       await api.post("logout/", { refresh_token: localStorage.getItem("refresh_token") });
       localStorage.clear();
       navigate("/");
+      success("Successfully logged out.")
     } catch (err) {
       console.error(err);
+      error("There's something wrong...")
     }
   };
 
+  const isLandlord = profile?.username?.toLowerCase().includes("landlord") || false;
+
   const menuItems = token
-    ? [
-      { name: "Home", path: "/home" },
-      { name: "Profile", path: `/profile/${profile?.user_id || ""}` },
-      { name: "Recommendation", path: "/home" },
-      { name: "Live Map", path: "/live-map" },
-    ]
+    ? isLandlord
+      ? [
+        { name: "Dashboard", path: "/landlord/dashboard" },
+        { name: "Properties", path: "/landlord/properties" },
+        { name: "Reports", path: "/landlord/reports" },
+        { name: "Profile", path: `/profile/${profile?.user_id || ""}` },
+      ]
+      : [
+        { name: "Home", path: "/home" },
+        { name: "Profile", path: `/profile/${profile?.user_id || ""}` },
+        { name: "Recommendation", path: "/room/recomendation" },
+        { name: "Live Map", path: "/live-map" },
+      ]
     : [
       { name: "Home", path: "/" },
       { name: "Recommendation", path: "/" },

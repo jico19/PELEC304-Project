@@ -123,8 +123,7 @@ const LandingPage = () => {
             </div>
             <h1 className="text-xl font-bold mb-5">Book</h1>
             <p className="text-gray-500 text-center">
-              Contact landlords directly, schedule visits, and secure your
-              rental with confidence.
+              Click rent room, and then your good to go!
             </p>
           </div>
 

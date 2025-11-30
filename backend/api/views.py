@@ -8,7 +8,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 from django.core.cache import cache
 from django.db.models import Q
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.pagination import PageNumberPagination
 #
 from rest_framework.response import Response
 from . import models
@@ -69,14 +69,13 @@ class RoomBudgetFilter(views.APIView):
             min_budget=min_budget,
             max_budget=max_budget
         )
+    
+        paginator = PageNumberPagination()
+        paginator.page_size = 8
+        paginated_qs = paginator.paginate_queryset(rooms, request)
+        serializer = serializers.RoomSerializer(paginated_qs,  many=True, context={'request': request})
         
-        print(rooms)
-        
-        serializer = serializers.RoomSerializer(rooms, many=True)
-        
-        return Response({
-            "data": serializer.data
-        })
+        return paginator.get_paginated_response(serializer.data)
 
 class GoogleLoginView(views.APIView):
 
@@ -145,10 +144,11 @@ class GeoCoding(views.APIView):
                 Q(owner__username__icontains=search)
             )
             
-            room_serializer = serializers.RoomSerializer(searched_room, many=True)
-
-            return Response({
-                "rooms": room_serializer.data
-            })
+            paginator = PageNumberPagination()
+            paginator.page_size = 8
+            paginated_qs = paginator.paginate_queryset(searched_room, request)
+            serializer = serializers.RoomSerializer(paginated_qs, many=True, context={'request': request})
+            
+            return paginator.get_paginated_response(serializer.data)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

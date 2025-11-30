@@ -2,9 +2,11 @@ import React from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "src/store/useToast";
 
 const GoogleLoginTest = () => {
   const navigate = useNavigate();
+  const { success, error, loading } = useToast();
 
   const handleGoogleLogin = async (credentialResponse) => {
     const id_token = credentialResponse.credential; // Google ID token
@@ -25,12 +27,14 @@ const GoogleLoginTest = () => {
       localStorage.setItem("profile_pic", res.data.user.avatar);
       console.log(res.data)
       navigate("/home");
+      success("Successfully logged in.")
     } catch (err) {
       console.error(
         "Error sending ID token to backend:",
         err.response?.data || err
       );
       console.log(id_token)
+      error("There's something wrong...")
     }
   };
 

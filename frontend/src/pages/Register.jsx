@@ -27,8 +27,6 @@ const Register = () => {
     console.log(data);
     try {
       const response = await api.post("user/", data);
-      localStorage.setItem("access_token", response.data.access);
-      localStorage.setItem("refresh_token", response.data.refresh);
       toast.success("Login Successfully.");
       // setTimeout(() => {
       //   navigate("/home");

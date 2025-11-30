@@ -20,9 +20,10 @@ class UserSerializers(serializers.ModelSerializer):
             'permanent_address',
             'budget'
         ]
-        read_only_fields = ['role', 'budget', 'id']
+        read_only_fields = ['budget', 'id']
         extra_kwargs = {
             "password": {"write_only": True},  # <-- make optional
+            "role": {"write_only": True}
         }
     
     def create(self, validated_data):
@@ -33,6 +34,7 @@ class UserSerializers(serializers.ModelSerializer):
 
 class RoomSerializer(serializers.ModelSerializer):
     owner_name = serializers.SerializerMethodField()
+    room_picture = serializers.ImageField(use_url=True)  # <-- ensures full URL
     
     class Meta:
         model = models.Room
@@ -72,11 +74,12 @@ class ActiveRentSerializers(serializers.ModelSerializer):
     tenant_name = serializers.SerializerMethodField()
     room_lat = serializers.SerializerMethodField()
     room_long = serializers.SerializerMethodField()
+    owner_id = serializers.SerializerMethodField()
     
     class Meta:
         model = models.ActiveRent
         fields = '__all__'
-        read_only_fields = ['rent_id', 'room','room_lat','room_long', 'tenant', 'start_date', 'due_date', 'rent_transaction', 'status', 'amount'] # -> add this later if not testing using drf ['room', 'tenant']
+        read_only_fields = ['rent_id','owner_id', 'room','room_lat','room_long', 'tenant', 'start_date', 'due_date', 'rent_transaction', 'status', 'amount'] # -> add this later if not testing using drf ['room', 'tenant']
 
     def get_room_name(self, obj):
         return obj.room.name
@@ -89,6 +92,9 @@ class ActiveRentSerializers(serializers.ModelSerializer):
 
     def get_room_long(self, obj):
         return obj.room.long
+    
+    def get_owner_id(self, obj):
+        return obj.room.owner.id
     
 
 class NotifcationSerializer(serializers.ModelSerializer):
@@ -153,6 +159,8 @@ class FavoriteSerializers(serializers.ModelSerializer):
 
 class SearchRoomSerializers(serializers.Serializer):
     address = serializers.CharField()
+
+
 
 
 class PaymentHistorySerializer(serializers.ModelSerializer):

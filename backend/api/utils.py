@@ -2,7 +2,8 @@ import math
 from .models import Room
 from django.utils import timezone
 from django.core.mail import send_mail
-
+from django.db.models import F, FloatField
+from django.db.models.functions import ACos, Cos, Radians, Sin
 
 def calculate_distance(user_lat, user_lon, room_lat, room_lon):
     """
@@ -22,7 +23,7 @@ def calculate_distance(user_lat, user_lon, room_lat, room_lon):
     return earth_radius_km * angular_distance
 
 
-def filter_by_budget_room(user_lat, user_lon, radius_km=5, min_budget=None, max_budget=None):
+def filter_by_budget_room(user_lat, user_lon, radius_km=0, min_budget=None, max_budget=None):
     """
     Filter rooms by approximate radius and optional min/max budget.
     Uses bounding-box approximation for radius filtering.
