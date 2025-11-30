@@ -12,7 +12,7 @@ import SubmitReport from './pages/SubmitReport'
 import 'leaflet/dist/leaflet.css';
 import Recomendataions from './pages/Recomendataions'
 import { Toaster } from "react-hot-toast";
-
+import About from './pages/About'
 
 function App() {
 
@@ -22,6 +22,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<LandingPage />} />
+          <Route path="/about" element={<About />} />
           <Route path="/signup" element={<Register />} />
           <Route path='/home' element={
             <ProtectedRoutes>

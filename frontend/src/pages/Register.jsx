@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../utils/Api";
 
@@ -9,164 +8,130 @@ const Register = () => {
   const {
     register,
     handleSubmit,
-    setError,
     watch,
     formState: { errors, isSubmitting },
   } = useForm({
-    defaultValues: {
-      role: "Tenant",
-      username: "",
-      password: "",
-    },
+    defaultValues: { role: "Tenant", username: "", password: "" },
   });
 
   const navigate = useNavigate();
   const selectedRole = watch("role");
 
   const formSubmit = async (data) => {
-    console.log(data);
     try {
-      const response = await api.post("user/", data);
-      toast.success("Login Successfully.");
-      // setTimeout(() => {
-      //   navigate("/home");
-      // }, 1000);
+      await api.post("user/", data);
+      toast.success("Account created successfully!");
+      setTimeout(() => navigate("/home"), 1000);
     } catch (error) {
       console.log(error);
+      toast.error("Something went wrong. Try again.");
     }
   };
 
   return (
-    <div className="w-full h-screen flex flex-col justify-center items-center">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-indigo-50 px-4 py-8">
+      {/* Back Button */}
       <button
         onClick={() => navigate("/")}
-        className="btn absolute top-10 right-20 hover:bg-white hover:text-black"
+        className="absolute top-6 right-6 bg-white text-indigo-700 px-4 py-2 rounded-lg shadow hover:bg-indigo-100 transition"
       >
-        Back to Home 
+        Back to Home
       </button>
-      <h1 className="font-bold text-3xl mb-2">Welcome to LCBNB</h1>
-      <p className="text-gray-500 mb-8">
+
+      {/* Hero Text */}
+      <h1 className="text-3xl md:text-4xl font-bold text-indigo-800 mb-2 text-center">
+        Welcome to LCBNB
+      </h1>
+      <p className="text-gray-600 mb-8 text-center">
         Sign in or create an account to get started.
       </p>
 
-      <div className="bg-white shadow-md flex items-center p-2 rounded-lg lg:w-2/8 w-4/5 mb-8">
-        <div className="w-full h-full bg-gray-200 p-1 flex justify-between  text-white font-semibold">
-          <Link to="/login" className="w-1/2 hover:bg-white text-black text-center">
-            Sign In
-          </Link>
-          <button className="w-1/2 bg-white text-black text-center cursor-pointer">
-            Sign Up
-          </button>
-        </div>
+      {/* Toggle Sign In / Sign Up */}
+      <div className="bg-white shadow-md flex items-center rounded-lg w-full max-w-md mb-6">
+        <Link
+          to="/login"
+          className="w-1/2 text-center py-2 rounded-l-lg font-semibold text-indigo-600 hover:bg-indigo-100 transition"
+        >
+          Sign In
+        </Link>
+        <button className="w-1/2 text-center py-2 rounded-r-lg font-semibold bg-indigo-600 text-white cursor-pointer">
+          Sign Up
+        </button>
       </div>
 
+      {/* Form */}
       <form
         onSubmit={handleSubmit(formSubmit)}
-        className="bg-white shadow-md flex flex-col items-center gap-3 p-8 rounded-lg w-4/5 lg:w-2/8"
+        className="bg-white shadow-md flex flex-col items-center gap-4 p-6 rounded-lg w-full max-w-md"
       >
-        <div className="w-full mb-5">
-          <h1 className="font-bold text-2xl mb-2">Create Account</h1>
-          <p className="text-gray-500 text-md">
+        {/* Form Header */}
+        <div className="w-full text-center mb-4">
+          <h2 className="text-2xl font-bold text-indigo-800 mb-1">Create Account</h2>
+          <p className="text-gray-500 text-sm">
             Choose your account type to get started.
           </p>
         </div>
 
-        <div className="w-full flex justify-between gap-2 mb-4">
-          <label
-            className={`relative flex flex-col items-center justify-center p-6 rounded-lg cursor-pointer transition-all border-2 w-1/2 ${
-              selectedRole === "Tenant"
-                ? "border-black bg-gray-100"
-                : "border-gray-200 hover:border-gray-400"
-            }`}
-          >
-            <input
-              type="radio"
-              value="Tenant"
-              {...register("role")}
-              className="absolute opacity-0"
-            />
-            <img
-              src="https://img.icons8.com/?size=100&id=12438&format=png&color=000000"
-              alt="User"
-              className="w-6 h-6"
-            />
-
-            <div className="font-bold">Tenant</div>
-            <div className="text-sm text-gray-500 text-center">Looking for a place</div>
-          </label>
-
-          <label
-            className={`relative flex flex-col items-center justify-center p-6 rounded-lg cursor-pointer transition-all border-2 w-1/2  ${
-              selectedRole === "Landlord"
-                ? "border-black bg-gray-100"
-                : "border-gray-200 hover:border-gray-400"
-            }`}
-          >
-            <input
-              type="radio"
-              value="Landlord"
-              {...register("role")}
-              className="absolute opacity-0"
-            />
-            <img
-              src="https://img.icons8.com/?size=100&id=73&format=png&color=000000"
-              alt="User"
-              className="w-6 h-6"
-            />
-
-            <div className="font-bold">Landlord</div>
-            <div className="text-sm text-gray-500 text-center">Have property to rent</div>
-          </label>
+        {/* Role Selection */}
+        <div className="w-full flex gap-4 mb-4">
+          {["Tenant", "Landlord"].map((role) => (
+            <label
+              key={role}
+              className={`flex-1 flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer border-2 transition-all ${selectedRole === role
+                  ? "border-indigo-600 bg-indigo-100"
+                  : "border-gray-300 hover:border-indigo-400"
+                }`}
+            >
+              <input
+                type="radio"
+                value={role}
+                {...register("role")}
+                className="hidden"
+              />
+              <div className="font-bold text-indigo-800">{role}</div>
+              <div className="text-sm text-gray-500 text-center mt-1">
+                {role === "Tenant" ? "Looking for a place" : "Have property to rent"}
+              </div>
+            </label>
+          ))}
         </div>
 
+        {/* Username */}
         <div className="w-full flex flex-col gap-2">
-          <h1>Username</h1>
+          <label className="font-medium text-gray-700">Username</label>
           <input
             type="text"
             {...register("username", { required: "Username is required." })}
-            placeholder={`${
-              errors.username ? errors.username?.message : "Enter your username"
-            }`}
-            className={`w-full bg-white px-5 py-3 rounded-md border shadow-md focus:outline-none focus:scale-95 transition-all ${
-              errors.username
-                ? "border-red-400 text-red-500"
-                : "border-gray-400"
-            }`}
+            placeholder={errors.username ? errors.username.message : "Enter your username"}
+            className={`w-full px-4 py-3 rounded-lg border shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition ${errors.username ? "border-red-400 text-red-500" : "border-gray-300"
+              }`}
           />
         </div>
 
+        {/* Password */}
         <div className="w-full flex flex-col gap-2">
-          <h1>Password</h1>
+          <label className="font-medium text-gray-700">Password</label>
           <input
             type="password"
             {...register("password", { required: "Password is required." })}
-            placeholder={`${
-              errors.password ? errors.password?.message : "Enter your password"
-            }`}
-            className={`w-full bg-white px-5 py-3 rounded-lg border  shadow-md focus:outline-none focus:scale-95 transition-all ${
-              errors.password
-                ? "border-red-400 text-red-500"
-                : "border-gray-400"
-            }`}
+            placeholder={errors.password ? errors.password.message : "Enter your password"}
+            className={`w-full px-4 py-3 rounded-lg border shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition ${errors.password ? "border-red-400 text-red-500" : "border-gray-300"
+              }`}
           />
         </div>
 
+        {/* Submit Button */}
         <button
-          className="btn text-xl w-full hover:scale-95 transition-all cursor-pointer py-6 mt-2"
           type="submit"
+          disabled={isSubmitting}
+          className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-500 transition mt-2"
         >
-          {isSubmitting ? <span className="loading"></span> : "Sign Up"}
+          {isSubmitting ? "Signing Up..." : "Sign Up"}
         </button>
 
+        {/* Errors */}
         {errors.root && (
-          <p className="text-red-600 text-xs mb-5">
-            <img
-              src="https://img.icons8.com/?size=100&id=60673&format=png&color=FA5252"
-              alt="error"
-              className="inline mr-1 w-4 h-4"
-            ></img>
-            {errors.root?.message}
-          </p>
+          <p className="text-red-600 text-sm mt-2">{errors.root.message}</p>
         )}
       </form>
     </div>

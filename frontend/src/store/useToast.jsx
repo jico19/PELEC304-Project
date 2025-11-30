@@ -13,6 +13,7 @@ export const useToast = () => {
         return toast.loading(message, options);
     };
 
+
     const custom = (message, options = {}) => {
         toast(message, options);
     };

@@ -22,7 +22,8 @@ import ProfileField from "src/components/ProfileField";
 import CustomDropdown from "src/components/CustomDropdown";
 import RoomMap from "src/components/RoomMap";
 import { useNavigate } from "react-router-dom";
-
+import { useToast } from "src/store/useToast";
+import toast from "react-hot-toast";
 
 const OCCUPATION_STATUS_CHOICES = [
     { label: "Working", icon: <Briefcase className="w-4 h-4 text-gray-500" /> },
@@ -45,7 +46,8 @@ const UserProfile = () => {
     const { profile, fetchUserProfile } = useProfile();
     const [isEditing, setIsEditing] = useState(false);
     const [userRoom, setUserRoom] = useState([])
-    const navigate = useNavigate() 
+    const navigate = useNavigate()
+    const { success, error, loading } = useToast();
 
 
     const { control, register, handleSubmit, reset, formState: { errors } } = useForm({
@@ -90,18 +92,23 @@ const UserProfile = () => {
     const onSubmit = async (data) => {
         try {
             const payload = { ...data };
-            delete payload.username; // username not editable
-            const res = await api.patch(`user/${profile.user_id}/`, payload);
-            console.log(res.data);
+            delete payload.username;
+
+            await toast.promise(
+                api.patch(`user/${profile.user_id}/`, payload),
+                {
+                    loading: "Updating...",
+                    success: "Profile Updated Successfyll.",
+                    error: "Failed to update your profile."
+                }
+            )
+
             fetchUserProfile()
             setIsEditing(false);
         } catch (err) {
             console.log(err.response?.data || err);
         }
     };
-
-
-    if (!profile) return <div>Loading...</div>;
 
     return (
         <div className="flex flex-col min-h-screen w-full bg-gray-50">
@@ -221,7 +228,7 @@ const UserProfile = () => {
                                 <div className="sm:col-span-2 flex justify-end gap-4">
                                     <button
                                         type="button"
-                                        onClick={() => { reset(); setIsEditing(false); }}
+                                        onClick={() => { reset(); setIsEditing(false); error("You cancelled your edit.") }}
                                         className="flex items-center gap-2 bg-gray-300 text-gray-800 px-6 py-3 rounded-xl hover:bg-gray-400 font-medium transition"
                                     >
                                         <X className="w-4 h-4" /> Cancel
@@ -258,7 +265,7 @@ const UserProfile = () => {
                         {/* Header */}
                         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                             <h2 className="text-xl md:text-2xl font-semibold text-gray-800">Your House</h2>
-                            <button 
+                            <button
                                 className="px-5 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 hover:scale-105"
                                 onClick={() => navigate(`/manage/rent/${profile.user_id}`)}
                             >
@@ -267,7 +274,7 @@ const UserProfile = () => {
                         </div>
 
                         {/* Map */}
-                        <div className="w-full h-96 rounded-2xl overflow-hidden border border-gray-200 shadow-inner">
+                        <div className="w-full h-96 rounded-2xl overflow-hidden border border-gray-200 shadow-inner relative">
                             <RoomMap
                                 lat={userRoom[0]?.room_lat}
                                 long={userRoom[0]?.room_long}

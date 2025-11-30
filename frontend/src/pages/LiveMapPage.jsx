@@ -7,6 +7,7 @@ import "leaflet/dist/leaflet.css";
 import api from "src/utils/Api";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useToast } from "src/store/useToast";
 
 
 const LiveMapView = () => {
@@ -15,9 +16,10 @@ const LiveMapView = () => {
   const [selectedRental, setSelectedRental] = useState(null);
   const [showCard, setShowCard] = useState(false);
   const cardRef = useRef(null);
-
+  const access_token = localStorage.getItem('access_token') // much better if nasa ano to store...
   const navigate = useNavigate()
-
+  const { success, error, loading } = useToast();
+  
   useEffect(() => {
     const fetchRentals = async () => {
       if (location.state) {
@@ -98,7 +100,7 @@ const LiveMapView = () => {
               position={[data.lat, data.long]}
               icon={priceIcon(data.price)}
               eventHandlers={{
-                click: () => handleMarkerClick(data.slug_name),
+                click: () => access_token ?  handleMarkerClick(data.slug_name) : error("You must be logged in to view the room."),
               }}
             />
           ))}
