@@ -15,11 +15,15 @@ import { Toaster } from "react-hot-toast";
 import About from './pages/About'
 import ResetPassword from './pages/ResetPassword'
 import AskEmailForPassword from './pages/AskEmailResetPassword'
+import LandlordApplication from './pages/LandlordApplication'
+import LandLordDashboard from './pages/landlord/LandLordDashboard'
+import LandLordProperties from './pages/landlord/LandlordProperties'
+import LandLordReport from './pages/landlord/LandlordReports'
 
 function App() {
 
   return (
-    <div className='w-full flex justify-center bg-gray-200 text-black'>
+    <div className=' text-black'>
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -59,6 +63,26 @@ function App() {
           <Route path='/room/recomendation' element={
             <ProtectedRoutes>
               <Recomendataions />
+            </ProtectedRoutes>
+          } />
+          <Route path='/landlord/application' element={
+            <ProtectedRoutes>
+              <LandlordApplication />
+            </ProtectedRoutes>
+          } />
+          <Route path='/landlord/dashboard' element={
+            <ProtectedRoutes>
+              <LandLordDashboard />
+            </ProtectedRoutes>
+          } />
+          <Route path='/landlord/properties' element={
+            <ProtectedRoutes>
+              <LandLordProperties />
+            </ProtectedRoutes>
+          } />
+          <Route path='/landlord/reports' element={
+            <ProtectedRoutes>
+              <LandLordReport />
             </ProtectedRoutes>
           } />
         </Routes>

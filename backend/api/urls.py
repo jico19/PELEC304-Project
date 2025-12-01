@@ -10,11 +10,12 @@ router.register(f'rent', viewsets.RentViewSets)
 router.register(f'transaction', viewsets.RentTransactionViewSets)
 router.register(f'report', viewsets.ReportViewSests)
 router.register(f'active', viewsets.ActiveRentViewSets, basename="active")
-router.register(f'favorite', viewsets.FavoriteViewSets, basename="favorite")
+router.register(f'application', viewsets.LandlordApplicationViewSets, basename="application")
 router.register(f'payment', viewsets.PaymentTransactionViewSet, basename="payment")
 
 
 urlpatterns = [
+    
     path('logout/', views.LogoutView.as_view(), name="logout_view"),
     
     # endpoints with query params
@@ -22,6 +23,8 @@ urlpatterns = [
     path('room/locations/', views.RoomsLocations.as_view(), name="room_locations"),
     path('room/search/', views.GeoCoding.as_view(), name="search_room"),
     
+    path('dashboard/data/', views.LandlordDashboardData.as_view(), name="dashboard_data"),
+    path('get-role/', views.GetRoles.as_view(), name="user_role"),
 
     # user endpoints
     path('', include(router.urls))

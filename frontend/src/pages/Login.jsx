@@ -4,8 +4,13 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import api from "../utils/Api";
 import GoogleLoginTest from "src/components/GoogleLogin";
+import { useRole } from "src/store/useRole";
+
 
 const Login = () => {
+
+  const { fetchRole } = useRole()
+
   const {
     register,
     handleSubmit,

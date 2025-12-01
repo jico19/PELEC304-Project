@@ -141,6 +141,7 @@ const UserProfile = () => {
                                 User ID: {profile.user_id}
                             </p>
                         </div>
+                        <button className="btn" onClick={() => navigate('/landlord/application')}>Apply as Landlord</button>
                     </div>
 
                     {/* Profile Details */}

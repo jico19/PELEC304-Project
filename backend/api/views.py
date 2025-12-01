@@ -7,16 +7,17 @@ from django.views.decorators.cache import cache_page
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from django.core.cache import cache
-from django.db.models import Q
+from django.db.models import Q, Count, Sum
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
 #
 from rest_framework.response import Response
 from . import models
 from . import serializers
 from .utils import filter_by_budget_room
 from .models import Room
+from django.shortcuts import get_object_or_404
 
-User = get_user_model()
 
 
 class LogoutView(views.APIView):
@@ -152,3 +153,51 @@ class GeoCoding(views.APIView):
             return paginator.get_paginated_response(serializer.data)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class GetRoles(views.APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        role = models.CustomUser.objects.filter(pk=request.user.pk).values_list('role', flat=True).first()
+        return Response({"user_role": role})
+
+class LandlordDashboardData(views.APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        paginator = PageNumberPagination()
+        paginator.page_size = 6
+        
+        recent_activities = models.Notification.objects.filter(sender=self.request.user)
+        active_properties = models.Room.objects.filter(
+            Q(owner=self.request.user),
+            Q(room_availability="Available")
+        ).count()
+        tenant_count = models.ActiveRent.objects.filter(room__owner=self.request.user).count()
+        monthly_earnings = models.ActiveRent.objects.filter(room__owner=self.request.user).aggregate(monthly_earning=Sum('amount'))
+        your_properties = models.Room.objects.filter(owner=self.request.user)
+        room_reports = models.Reports.objects.filter(room__owner=self.request.user)
+        
+        # paginated if meron
+        paginated_your_properties = paginator.paginate_queryset(your_properties, request)
+        
+        # serializers
+        recent_activities_serializer = serializers.NotifcationSerializer(recent_activities, many=True)
+        your_properties_serializer = serializers.RoomSerializer(paginated_your_properties, many=True, context={'request': request})
+        room_report_serializer = serializers.ReportSerializers(room_reports, many=True)
+
+                
+        return Response({
+            "active_properties": active_properties,
+            "your_properties": {
+                "count": paginator.page.paginator.count,
+                "next": paginator.get_next_link(),
+                "previous": paginator.get_previous_link(),
+                "results": your_properties_serializer.data
+            },
+            "recent_activities": recent_activities_serializer.data,
+            "number_of_tenants": tenant_count,
+            "monthly_earnings": monthly_earnings['monthly_earning'],
+            "room_reports": room_report_serializer.data,
+            
+        })
