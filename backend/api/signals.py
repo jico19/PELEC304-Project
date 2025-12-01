@@ -7,6 +7,10 @@ from . import models
 from django.shortcuts import get_object_or_404
 from django.core.cache import cache
 from .utils import send_welcome_email
+from django_rest_passwordreset.signals import reset_password_token_created
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 ''''
     TODO MAKE A SIGNALS FOR CREATING ACTIVE RENT
@@ -72,3 +76,23 @@ def send_notification_move_out(sender, instance, **kwargs):
         room_instance.room_availability = 'Available'
         print(room_instance.room_availability)
         room_instance.save()
+
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, **kwargs):
+    user = reset_password_token.user
+    
+    html_content = render_to_string("api/token_email.html", {
+        "user": user,
+        "reset_token": reset_password_token.key,
+        "frontend_url": "http://localhost:5173/reset/password/confirm",  # link to your frontend page
+    })
+    text_content = strip_tags(html_content)
+
+    email = EmailMultiAlternatives(
+        subject="Reset Your Password",
+        body=text_content,
+        from_email="noreply@yourapp.com",
+        to=[user.email],
+    )
+    email.attach_alternative(html_content, "text/html")
+    email.send()

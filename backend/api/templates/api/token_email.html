@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Password Reset</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f7f7f7;
+        color: #333333;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 40px auto;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      }
+
+      h2 {
+        color: #4f46e5; /* indigo */
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+
+      p {
+        margin-bottom: 16px;
+        line-height: 1.5;
+      }
+
+      .btn {
+        display: inline-block;
+        background-color: #16a34a; /* green */
+        color: #ffffff;
+        font-weight: bold;
+        padding: 14px 28px;
+        text-decoration: none;
+        border-radius: 8px;
+        margin-top: 10px;
+      }
+
+      .btn:hover {
+        background-color: #15803d;
+      }
+
+      .footer {
+        color: #555555;
+        font-size: 14px;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Hello {{ user.get_full_name|default:user.username }},</h2>
+      
+      <p>You requested a password reset. Click the button below to reset your password:</p>
+      
+      <p>
+        <a class="btn" href="{{ frontend_url }}?token={{ reset_token }}">Reset Password</a>
+      </p>
+      
+      <p class="footer">
+        If you didn’t request this, you can safely ignore this email.
+      </p>
+      
+      <p class="footer">
+        Thanks,<br />
+        <strong>LucenaBNB</strong>
+      </p>
+    </div>
+  </body>
+</html>

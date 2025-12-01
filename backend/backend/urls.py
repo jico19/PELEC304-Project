@@ -21,6 +21,9 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     
+    # password reset
+    path('api/password/reset/', include('django_rest_passwordreset.urls'), name="password_reset"),
+    
     # google login
     path('auth/google/', GoogleLoginView.as_view(), name="google_login"),
     
