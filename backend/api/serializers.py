@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from . import models
 from rest_framework.exceptions import ValidationError
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class UserSerializers(serializers.ModelSerializer):
@@ -150,18 +151,8 @@ class RentTransactionSerializers(serializers.ModelSerializer):
         return attrs
 
 
-class FavoriteSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = models.Favorites
-        fields = ['user', 'room']
-        read_only_fields = ['user']
-
-
 class SearchRoomSerializers(serializers.Serializer):
     address = serializers.CharField()
-
-
-
 
 class PaymentHistorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -183,4 +174,17 @@ class PaymentHistorySerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"amount": "Amount must be greater than 0."})
 
         
+        return attrs
+
+class LandlordApplicationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.LandlordApplication
+        fields = ['id', 'document', 'status', 'applied_at']
+        read_only_fields = ['status', 'applied_at',  'applicant']
+    
+    
+    def validate(self, attrs):
+        user = self.context['request'].user.pk
+        if models.LandlordApplication.objects.filter(applicant=user).exists():
+            raise serializers.ValidationError({"applicant": "You have already uploaded a document."})
         return attrs

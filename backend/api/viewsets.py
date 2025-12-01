@@ -122,15 +122,6 @@ class ActiveRentViewSets(viewsets.ModelViewSet):
     def get_queryset(self):
         return models.ActiveRent.objects.filter(tenant=self.request.user)
 
-class FavoriteViewSets(viewsets.ModelViewSet):
-    serializer_class = serializers.FavoriteSerializers
-    
-    def perform_create(self, serializer):
-        return serializer.save(user=self.request.user)
-    
-    def get_queryset(self):
-        data = models.Favorites.objects.filter(user=self.request.user)
-        return data
 
 
 class PaymentTransactionViewSet(viewsets.ModelViewSet):
@@ -144,3 +135,12 @@ class PaymentTransactionViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         data = models.RentPaymentHistory.objects.filter(renter=self.request.user)
         return data
+
+
+class LandlordApplicationViewSets(viewsets.ModelViewSet):
+    serializer_class = serializers.LandlordApplicationSerializer
+    queryset = models.LandlordApplication.objects.all()
+    permission_classes = [IsAuthenticated]
+    
+    def perform_create(self, serializer):
+        return serializer.save(applicant=self.request.user)
