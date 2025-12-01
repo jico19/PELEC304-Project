@@ -1,9 +1,12 @@
 import math
 from .models import Room
 from django.utils import timezone
-from django.core.mail import send_mail
 from django.db.models import F, FloatField
 from django.db.models.functions import ACos, Cos, Radians, Sin
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
 
 def calculate_distance(user_lat, user_lon, room_lat, room_lon):
     """
@@ -62,26 +65,14 @@ def check_due_dates_and_send_email(rent):
         )
 
 def send_welcome_email(to_email, username):
-    subject = "Welcome to Our Platform"
-    message = f"""
-        Hi {username},
+    html_content = render_to_string("api/welcome.html", {"username": username})
+    text_content = strip_tags(html_content)
 
-        Welcome to LCBNB — your go-to platform for discovering boarding houses quickly and conveniently.
-
-        Your account has been successfully created. You can now explore available rooms, check prices, view locations, and connect directly with landlords. We built LCBNB to make your search easier, faster, and more reliable.
-
-        If you have any questions or need assistance, feel free to reach out anytime.
-
-        Thank you for joining LCBNB.
-        We’re glad to have you onboard.
-
-        — LCBNB Team
-""" 
-
-    send_mail(
-        subject=subject,
-        message=message,
-        from_email=None,
-        recipient_list=[to_email],
-        fail_silently=False,
+    email = EmailMultiAlternatives(
+        subject="Welcome to Our Room Rental Service",
+        body=text_content,
+        from_email="noreply@yourapp.com",
+        to=[to_email],
     )
+    email.attach_alternative(html_content, "text/html")
+    email.send()
