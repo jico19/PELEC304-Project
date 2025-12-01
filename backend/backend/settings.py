@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     
     # rest framework    
     'rest_framework',
+    'django_rest_passwordreset',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
@@ -188,3 +189,12 @@ EMAIL_USE_TLS = True  # Set to True for TLS/STARTTLS, False for SSL
 EMAIL_USE_SSL = False # Set to True for SSL, False for TLS/STARTTLS
 EMAIL_HOST_USER = os.environ.get('GMAIL_ACCOUNT')  # Your email address
 EMAIL_HOST_PASSWORD = os.environ.get('GOOGLE_APP_PASSOWRD') # Your email password or app-specific password
+
+
+DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = {
+    "CLASS": "django_rest_passwordreset.tokens.RandomStringTokenGenerator",
+    "OPTIONS": {
+        "min_length": 20,
+        "max_length": 30
+    }
+}

@@ -13,6 +13,8 @@ import 'leaflet/dist/leaflet.css';
 import Recomendataions from './pages/Recomendataions'
 import { Toaster } from "react-hot-toast";
 import About from './pages/About'
+import ResetPassword from './pages/ResetPassword'
+import AskEmailForPassword from './pages/AskEmailResetPassword'
 
 function App() {
 
@@ -24,6 +26,8 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/signup" element={<Register />} />
+          <Route path="/reset/password" element={<AskEmailForPassword />} />
+          <Route path="/reset/password/confirm" element={<ResetPassword />} />
           <Route path='/home' element={
             <ProtectedRoutes>
               <Home />

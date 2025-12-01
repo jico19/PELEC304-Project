@@ -110,9 +110,9 @@ const Login = () => {
         </div>
 
         {/* Forgot password */}
-        <Link className="self-start text-sm text-green-600 hover:underline">
+        <button className="self-start text-sm text-green-600 hover:underline" onClick={() => navigate('/reset/password')}>
           Forgot password?
-        </Link>
+        </button>
 
         {/* Submit button */}
         <button

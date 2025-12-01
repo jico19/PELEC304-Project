@@ -71,31 +71,7 @@ const Register = () => {
             Choose your account type to get started.
           </p>
         </div>
-
-        {/* Role Selection */}
-        <div className="w-full flex gap-4 mb-4">
-          {["Tenant", "Landlord"].map((role) => (
-            <label
-              key={role}
-              className={`flex-1 flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer border-2 transition-all ${selectedRole === role
-                  ? "border-indigo-600 bg-indigo-100"
-                  : "border-gray-300 hover:border-indigo-400"
-                }`}
-            >
-              <input
-                type="radio"
-                value={role}
-                {...register("role")}
-                className="hidden"
-              />
-              <div className="font-bold text-indigo-800">{role}</div>
-              <div className="text-sm text-gray-500 text-center mt-1">
-                {role === "Tenant" ? "Looking for a place" : "Have property to rent"}
-              </div>
-            </label>
-          ))}
-        </div>
-
+        
         {/* Username */}
         <div className="w-full flex flex-col gap-2">
           <label className="font-medium text-gray-700">Username</label>
