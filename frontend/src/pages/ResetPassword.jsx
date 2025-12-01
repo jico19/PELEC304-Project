@@ -79,7 +79,8 @@ const ResetPassword = () => {
         } catch (err) {
             console.error(err)
             if (err.status == 400) {
-                error(err.response.data)
+                error(err.response.data.password[0])
+                return
             }
             error("Something went wrong. Please try again.")
         } finally {

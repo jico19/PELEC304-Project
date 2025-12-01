@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Email</title>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f6fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        p {
+            color: #444;
+            line-height: 1.7;
+            font-size: 15px;
+            white-space: pre-line;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .brand {
+            font-weight: bold;
+            color: #005bea;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Hello, {{ username }}!</h1>
+
+        <p>
+            Welcome to <span class="brand">LCBNB</span> — your go-to platform for discovering boarding houses quickly
+            and conveniently.
+
+            Your account has been successfully created. You can now explore available rooms, check prices, view
+            locations, and connect directly with landlords. We built LCBNB to make your search easier, faster, and more
+            reliable.
+
+            If you have any questions or need assistance, feel free to reach out anytime.
+
+            Thank you for joining <span class="brand">LCBNB</span>.
+            We’re glad to have you onboard.
+
+            — LCBNB Team
+        </p>
+
+        <div class="footer">
+            © 2025 LCBNB. All rights reserved.
+        </div>
+    </div>
+</body>
+
+</html>

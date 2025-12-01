@@ -42,6 +42,11 @@ const RoomDetailPage = () => {
 
             setChange(true);
         } catch (err) {
+            if (err.response?.data.budget) {
+                error("Insufficient budget to rent this room.");
+                return
+            }
+
             console.log(err.response?.data);
             toast.error(err.response?.data?.detail || "Something went wrong.");
         }
