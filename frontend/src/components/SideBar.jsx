@@ -1,42 +1,60 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { Flag, User, LogOut, House, LayoutDashboard, Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import api from "src/utils/Api";
 import { useToast } from "src/store/useToast";
-import { useRole } from "src/store/useRole";
-
+import { useProfile } from "src/store/useProfile";
 
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
     const { success, error } = useToast()
-    const { clearRole } = useRole()
+    const [isLoading, setLoading] = useState(false)
+    const { profile, fetchUserProfile } = useProfile()
 
     const menuItems = [
         { name: "Dashboard", icon: <LayoutDashboard className="w-5 h-5" />, link: "/landlord/dashboard" },
         { name: "Properties", icon: <House className="w-5 h-5" />, link: "/landlord/properties" },
         { name: "Reports", icon: <Flag className="w-5 h-5" />, link: "/landlord/reports" },
-        { name: "Profile", icon: <User className="w-5 h-5" />, link: "/landlord/profile" },
+        { name: "Profile", icon: <User className="w-5 h-5" />, link: `/landlord/reports/${profile.user_id}` },
     ];
 
     const handleLogout = async () => {
         try {
             await api.post("logout/", { refresh_token: localStorage.getItem("refresh_token") });
-            localStorage.removeItem('access_token')
-            localStorage.removeItem('profile-storage')
-            localStorage.removeItem('refresh_token')
-            localStorage.removeItem('profile_pic')
-            localStorage.removeItem('user_coords')
-            localStorage.removeItem('role-storage')
-            clearRole()
-            window.location.reload();
-            navigate("/");
-            success("Successfully logged out.")
+            setLoading(true)
+            setTimeout(() => {
+                localStorage.removeItem('access_token')
+                localStorage.removeItem('profile-storage')
+                localStorage.removeItem('refresh_token')
+                localStorage.removeItem('profile_pic')
+                localStorage.removeItem('user_coords')
+                localStorage.removeItem('role-storage')
+                navigate("/");
+                success("Successfully logged out.")
+                setLoading(false)
+            }, 1500)
+
         } catch (err) {
             console.error(err);
             error("There's something wrong...")
         }
     };
+
+    useEffect(() => {
+        if (localStorage.getItem('access_token')) fetchUserProfile();
+    }, []);
+
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center h-screen bg-white">
+                <div className="flex flex-col items-center gap-3">
+                    <div className="w-10 h-10 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin" />
+                    <p className="text-lg font-medium text-gray-700">Logging out...</p>
+                </div>
+            </div>
+        );
+    }
 
 
     return (
@@ -69,7 +87,7 @@ const Sidebar = () => {
                         ))}
                     </nav>
                     <div className="p-4 border-t border-indigo-500">
-                        <button 
+                        <button
                             className="flex items-center gap-2 w-full justify-center bg-green-400 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded transition-colors"
                             onClick={() => handleLogout()}
                         >

@@ -9,7 +9,7 @@ import { useRole } from "src/store/useRole";
 
 const Login = () => {
 
-  const { fetchRole, role } = useRole()
+  const { fetchRole } = useRole()
 
   const {
     register,
@@ -26,7 +26,7 @@ const Login = () => {
       localStorage.setItem("access_token", response.data.access);
       localStorage.setItem("refresh_token", response.data.refresh);
       toast.success("Login Successfully.");
-      fetchRole()
+      await fetchRole()
       setTimeout(() => {
         navigate("/home");
       }, 1000);
@@ -36,8 +36,9 @@ const Login = () => {
     }
   };
 
+  useEffect(() => {
 
-
+  }, [])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-indigo-50 px-4">

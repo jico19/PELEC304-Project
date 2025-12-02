@@ -3,10 +3,12 @@ import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "src/store/useToast";
+import { useRole } from "src/store/useRole";
 
 const GoogleLoginTest = () => {
   const navigate = useNavigate();
   const { success, error, loading } = useToast();
+  const { fetchRole } = useRole()  
 
   const handleGoogleLogin = async (credentialResponse) => {
     const id_token = credentialResponse.credential; // Google ID token
@@ -25,7 +27,7 @@ const GoogleLoginTest = () => {
       localStorage.setItem("access_token", res.data.access);
       localStorage.setItem("refresh_token", res.data.refresh);
       localStorage.setItem("profile_pic", res.data.user.avatar);
-      console.log(res.data)
+      await fetchRole()
       navigate("/home");
       success("Successfully logged in.")
     } catch (err) {

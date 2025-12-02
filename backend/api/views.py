@@ -175,29 +175,32 @@ class LandlordDashboardData(views.APIView):
         ).count()
         tenant_count = models.ActiveRent.objects.filter(room__owner=self.request.user).count()
         monthly_earnings = models.ActiveRent.objects.filter(room__owner=self.request.user).aggregate(monthly_earning=Sum('amount'))
-        your_properties = models.Room.objects.filter(owner=self.request.user)
         room_reports = models.Reports.objects.filter(room__owner=self.request.user)
         
         # paginated if meron
-        paginated_your_properties = paginator.paginate_queryset(your_properties, request)
         
         # serializers
         recent_activities_serializer = serializers.NotifcationSerializer(recent_activities, many=True)
-        your_properties_serializer = serializers.RoomSerializer(paginated_your_properties, many=True, context={'request': request})
         room_report_serializer = serializers.ReportSerializers(room_reports, many=True)
 
                 
         return Response({
             "active_properties": active_properties,
-            "your_properties": {
-                "count": paginator.page.paginator.count,
-                "next": paginator.get_next_link(),
-                "previous": paginator.get_previous_link(),
-                "results": your_properties_serializer.data
-            },
             "recent_activities": recent_activities_serializer.data,
             "number_of_tenants": tenant_count,
             "monthly_earnings": monthly_earnings['monthly_earning'],
             "room_reports": room_report_serializer.data,
             
         })
+
+class LandlordRooms(views.APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        paginator = PageNumberPagination()
+        paginator.page_size = 6
+        
+        your_properties = models.Room.objects.filter(owner=self.request.user)
+        paginated_rooms = paginator.paginate_queryset(your_properties, request)
+        serializer = serializers.RoomSerializer(paginated_rooms, many=True, context={'request': request})
+        return paginator.get_paginated_response(serializer.data)
