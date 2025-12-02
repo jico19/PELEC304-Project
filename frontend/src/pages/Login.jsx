@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -26,6 +26,7 @@ const Login = () => {
       localStorage.setItem("access_token", response.data.access);
       localStorage.setItem("refresh_token", response.data.refresh);
       toast.success("Login Successfully.");
+      await fetchRole()
       setTimeout(() => {
         navigate("/home");
       }, 1000);
@@ -34,6 +35,10 @@ const Login = () => {
       toast.error("Login failed. Check your credentials.");
     }
   };
+
+  useEffect(() => {
+
+  }, [])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-indigo-50 px-4">

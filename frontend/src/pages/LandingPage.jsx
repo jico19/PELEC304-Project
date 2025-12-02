@@ -53,10 +53,10 @@ const LandingPage = () => {
       >
         <div className="absolute inset-0 bg-slate-900/50"></div>
         <h1 className="relative z-10 text-5xl md:text-6xl font-bold text-indigo-50">
-          Find Your Home in Lucena City
+          LucenaBNB Your Home Away From Home
         </h1>
         <p className="relative z-10 max-w-2xl text-lg md:text-xl text-gray-200">
-          Discover the perfect boarding house, dormitory, apartment, or hotel for students, OFWs, and professionals.
+          Find your perfect boarding house in Lucena. Affordable, verified, and hassle-free.
         </p>
 
         <div className="relative z-10 mt-8 flex w-full max-w-2xl items-center rounded-full bg-white p-4 shadow-md">
