@@ -8,7 +8,8 @@ import Pagination from "src/components/PaginationButton";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import useLocation from "src/store/useLocation";
-import { get } from "react-hook-form";
+import { useRole } from "src/store/useRole";
+
 
 const Home = () => {
     const navigate = useNavigate();
@@ -19,8 +20,24 @@ const Home = () => {
     const [loading, setLoading] = useState(true); // loading state
     const limit = 8;
     const { location, error, getLocation } = useLocation()
+    const { role } = useRole()
+    const [redirecting, setRedirecting] = useState(false);
 
 
+
+    useEffect(() => {
+        if (!role) return;
+
+        setRedirecting(true);
+
+        setTimeout(() => {
+            if (role === "Landlord") {
+                navigate("/landlord/dashboard");
+            } else if (role === "Tenant") {
+                navigate("/home");   // or whatever your tenant page is
+            }
+        }, 800); // smooth but fast
+    }, [role]);
 
     const fetchRooms = async (pageNumber = 1, isSearch = false) => {
         setLoading(true);
@@ -67,6 +84,18 @@ const Home = () => {
     const RentNowHandler = async (slug_name) => {
         navigate(`/room/${slug_name}`);
     };
+
+    if (redirecting) {
+        return (
+            <div className="flex items-center justify-center h-screen bg-white">
+                <div className="flex flex-col items-center gap-3">
+                    <div className="w-10 h-10 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin" />
+                    <p className="text-lg font-medium text-gray-700">Redirecting...</p>
+                </div>
+            </div>
+        );
+    }
+
 
     return (
         <div className="flex flex-col min-h-screen w-full bg-gray-50">

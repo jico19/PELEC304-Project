@@ -18,6 +18,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),  # allauth routes
 
     # JWT token endpoints
+    path('api/token/', TokenObtainPairView.as_view(), name="access_token"),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     
     # password reset

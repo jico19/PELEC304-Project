@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 import { Flag, User, LogOut, House, LayoutDashboard, Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import api from "src/utils/Api";
+import { useToast } from "src/store/useToast";
+import { useRole } from "src/store/useRole";
+
 
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
+    const { success, error } = useToast()
+    const { clearRole } = useRole()
 
     const menuItems = [
         { name: "Dashboard", icon: <LayoutDashboard className="w-5 h-5" />, link: "/landlord/dashboard" },
@@ -12,6 +18,26 @@ const Sidebar = () => {
         { name: "Reports", icon: <Flag className="w-5 h-5" />, link: "/landlord/reports" },
         { name: "Profile", icon: <User className="w-5 h-5" />, link: "/landlord/profile" },
     ];
+
+    const handleLogout = async () => {
+        try {
+            await api.post("logout/", { refresh_token: localStorage.getItem("refresh_token") });
+            localStorage.removeItem('access_token')
+            localStorage.removeItem('profile-storage')
+            localStorage.removeItem('refresh_token')
+            localStorage.removeItem('profile_pic')
+            localStorage.removeItem('user_coords')
+            localStorage.removeItem('role-storage')
+            clearRole()
+            window.location.reload();
+            navigate("/");
+            success("Successfully logged out.")
+        } catch (err) {
+            console.error(err);
+            error("There's something wrong...")
+        }
+    };
+
 
     return (
         <>
@@ -43,7 +69,10 @@ const Sidebar = () => {
                         ))}
                     </nav>
                     <div className="p-4 border-t border-indigo-500">
-                        <button className="flex items-center gap-2 w-full justify-center bg-green-400 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded transition-colors">
+                        <button 
+                            className="flex items-center gap-2 w-full justify-center bg-green-400 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded transition-colors"
+                            onClick={() => handleLogout()}
+                        >
                             <LogOut className="w-4 h-4" />
                             Logout
                         </button>

@@ -18,7 +18,7 @@ from .utils import filter_by_budget_room
 from .models import Room
 from django.shortcuts import get_object_or_404
 
-
+User = get_user_model()
 
 class LogoutView(views.APIView):
     def post(self, request):

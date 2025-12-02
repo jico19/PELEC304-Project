@@ -4,6 +4,7 @@ import { useProfile } from "src/store/useProfile";
 import { useEffect, useState } from "react";
 import api from "src/utils/Api";
 import { useToast } from "src/store/useToast";
+import { useRole } from "src/store/useRole";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const NavBar = () => {
   const { profile, fetchUserProfile } = useProfile();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { success, error, loading } = useToast();
+  const { clearRole } = useRole()
 
   useEffect(() => {
     if (!profile?.user_id && token) fetchUserProfile();
@@ -24,6 +26,8 @@ const NavBar = () => {
       localStorage.removeItem('refresh_token')
       localStorage.removeItem('profile_pic')
       localStorage.removeItem('user_coords')
+      localStorage.removeItem('role-storage')
+      clearRole()
       window.location.reload();
       navigate("/");
       success("Successfully logged out.")
