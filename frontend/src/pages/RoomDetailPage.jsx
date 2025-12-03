@@ -160,7 +160,7 @@ const RoomDetailPage = () => {
                                     disabled={room.room_availability !== 'Available'}
                                     onClick={RentHandler}
                                     className={`w-full mt-4 font-semibold py-2 rounded-lg
-        ${room.room_availability === 'Available'
+                                    ${room.room_availability === 'Available'
                                             ? 'bg-green-600 text-white hover:opacity-90'
                                             : 'bg-gray-400 text-gray-200 cursor-not-allowed'
                                         }`}

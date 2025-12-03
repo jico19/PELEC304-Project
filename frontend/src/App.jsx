@@ -21,6 +21,8 @@ import LandLordProperties from './pages/landlord/LandlordProperties'
 import LandLordReport from './pages/landlord/LandlordReports'
 import LandlordProfile from './pages/landlord/LandlordProfile'
 import AddProperty from './pages/landlord/AddProperty'
+import PropertyEdit from './pages/landlord/PropertyEdit'
+import PropertyView from './pages/landlord/ViewPorperty'
 
 function App() {
 
@@ -95,6 +97,16 @@ function App() {
           <Route path='/landlord/properties/add' element={
             <ProtectedRoutes>
               <AddProperty />
+            </ProtectedRoutes>
+          } />
+          <Route path='/landlord/properties/edit/:slug_name' element={
+            <ProtectedRoutes>
+              <PropertyEdit />
+            </ProtectedRoutes>
+          } />
+          <Route path='/landlord/properties/:slug_name' element={
+            <ProtectedRoutes>
+              <PropertyView />
             </ProtectedRoutes>
           } />
         </Routes>
