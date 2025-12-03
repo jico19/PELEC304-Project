@@ -103,11 +103,17 @@ const LandLordProperties = () => {
                                 {item.address}
                             </p>
                             <div className="flex items-center gap-3 mt-4">
-                                <button className="flex items-center gap-1 px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-lg">
+                                <button 
+                                    className="flex items-center gap-1 px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-lg"
+                                    onClick={() => navigate(`/landlord/properties/edit/${item.slug_name}`)}
+                                >
                                     <Edit className="w-4 h-4" />
                                     Edit
                                 </button>
-                                <button className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white hover:bg-blue-700 rounded-lg">
+                                <button 
+                                    className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white hover:bg-blue-700 rounded-lg"
+                                    onClick={() => navigate(`/landlord/properties/${item.slug_name}`)}
+                                >
                                     <Eye className="w-4 h-4" />
                                     View
                                 </button>

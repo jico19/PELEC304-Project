@@ -169,12 +169,9 @@ class LandlordDashboardData(views.APIView):
         paginator.page_size = 6
         
         recent_activities = models.Notification.objects.filter(sender=self.request.user)
-        active_properties = models.Room.objects.filter(
-            Q(owner=self.request.user),
-            Q(room_availability="Available")
-        ).count()
+        active_properties = models.ActiveRent.objects.filter(room__owner=self.request.user).count()
         tenant_count = models.ActiveRent.objects.filter(room__owner=self.request.user).count()
-        monthly_earnings = models.ActiveRent.objects.filter(room__owner=self.request.user).aggregate(monthly_earning=Sum('amount'))
+        monthly_earnings = models.RentPaymentHistory.objects.filter(room__owner=self.request.user).aggregate(monthly_earning=Sum('amount'))
         room_reports = models.Reports.objects.filter(room__owner=self.request.user)
         
         # paginated if meron

@@ -96,3 +96,12 @@ def password_reset_token_created(sender, instance, reset_password_token, **kwarg
     )
     email.attach_alternative(html_content, "text/html")
     email.send()
+
+@receiver([post_save], sender=models.RentPaymentHistory)
+def send_notifcation_that_tenant_has_paid(sender, instance, created, **kwargs):
+    if created:
+        models.Notification.objects.create(
+            renter=instance.renter,
+            sender=instance.room.owner,
+            content=f"{instance.renter.get_full_name()} has paid its rent for {instance.amount}₱"
+        )

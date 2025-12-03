@@ -6,7 +6,7 @@ import { useDashboard } from "src/store/useDashboard";
 
 const Dashboard = () => {
     const { dashboardData, fetchDashboardData } = useDashboard()
-
+    console.log(dashboardData)
     useEffect(() => {
         fetchDashboardData()
     }, [])

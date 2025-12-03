@@ -1,12 +1,16 @@
 import Sidebar from "src/components/SideBar";
-import { Image, Home, DollarSign, MapPin, Info, Wifi, Coffee, Airplay, X } from "lucide-react";
+import { Image, Home, DollarSign, MapPin, Info, Wifi, Coffee, Airplay, ArrowLeft} from "lucide-react";
 import { useState } from "react";
 import api from "src/utils/Api";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import AmenitiesToggle from "src/components/AmenitiesToggle";
+import { useToast } from "src/store/useToast";
+import { useNavigate } from "react-router-dom";
 
 const AddProperty = () => {
+    const navigate = useNavigate()
+    const { error, success } = useToast()
     const [image, setImage] = useState(null);
     const [propertyName, setPropertyName] = useState("");
     const [price, setPrice] = useState("");
@@ -18,7 +22,14 @@ const AddProperty = () => {
     const [latLng, setLatLng] = useState(null);
 
     const handleSubmit = async (e) => {
+        // submiting a room
         e.preventDefault();
+
+        if (!image || !propertyName || !price || !address || !description || !latLng) {
+            error("Please fill up the remaining form...");
+            return;
+        }
+
         const formData = new FormData();
         formData.append("room_picture", image);
         formData.append("name", propertyName);
@@ -34,8 +45,10 @@ const AddProperty = () => {
         try {
             const res = await api.post("room/", formData);
             console.log(res.data);
-        } catch (error) {
-            console.log(error);
+            success("Successfully uploaded a room.")
+        } catch (err) {
+            console.log(err);
+            error("There's something wrong in uploading your property please try again.")
         }
     };
 
@@ -64,10 +77,23 @@ const AddProperty = () => {
             <main className="flex-1 p-10">
                 {/* Header */}
                 <header className="mb-10">
-                    <h1 className="text-4xl font-bold text-gray-800 mb-2">Add New Property</h1>
-                    <p className="text-gray-500">Fill in the details below to list your property.</p>
-                </header>
+                    <h1 className="text-4xl font-bold text-gray-800 mb-2">
+                        Add New Property
+                    </h1>
 
+                    <p className="text-gray-500 mb-4">
+                        Fill in the details below to list your property.
+                    </p>
+
+                    <button
+                        type="button"
+                        onClick={() => navigate('/landlord/properties')}
+                        className="inline-flex items-center gap-2 bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition"
+                    >
+                        <ArrowLeft size={16} />
+                        Go back
+                    </button>
+                </header>
                 {/* Form Card */}
                 <div className="bg-white shadow-lg rounded-xl p-8 max-w-5xl mx-auto space-y-8">
                     {/* Property Info */}
@@ -175,12 +201,6 @@ const AddProperty = () => {
                                 className="flex-1 bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition"
                             >
                                 Add Property
-                            </button>
-                            <button
-                                type="button"
-                                className="flex-1 flex items-center justify-center gap-2 bg-gray-200 text-gray-700 font-semibold py-3 rounded-lg hover:bg-gray-300 transition"
-                            >
-                                <X size={16} /> Cancel
                             </button>
                         </div>
                     </form>
