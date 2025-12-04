@@ -22,11 +22,11 @@ const PropertyEdit = () => {
     const [latLng, setLatLng] = useState(null);
     const [availability, setAvailability] = useState("");
 
+
     useEffect(() => {
         const fetchRoom = async () => {
             try {
                 const res = await api.get(`room/${slug_name}/`);
-                setTimeout(() => setRoom(res.data), 1000);
                 console.log(res.data)
                 setImage(res.data.room_picture)
                 setPropertyName(res.data.name)
@@ -44,7 +44,7 @@ const PropertyEdit = () => {
         fetchRoom();
     }, []);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         const formData = new FormData()
         if (propertyImage && propertyImage instanceof File) {
@@ -59,16 +59,16 @@ const PropertyEdit = () => {
         formData.append("comfort_room", comfortRoom)
         formData.append("air_condition", aircon)
         try {
-            setTimeout( async () => {
-                await toast.promise(
-                    api.patch(`room/${slug_name}/`, formData), {
-                    loading: "Processing your update.",
-                    success: "Your property is updated successfully.",
-                    error: "Failed to update your Property."
+
+            await toast.promise(
+                api.patch(`room/${slug_name}/`, formData), {
+                loading: "Processing your update.",
+                success: "Your property is updated successfully.",
+                error: "Failed to update your Property."
                 }
-                )
-            }, 800)
-            navigate(-1)
+            )
+
+            navigate('/landlord/properties', { state: { refresh: true } });
             success("Successfully updated.")
         } catch (err) {
             console.log(err)
