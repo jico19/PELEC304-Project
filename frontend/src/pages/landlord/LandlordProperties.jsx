@@ -3,7 +3,7 @@ import Sidebar from "src/components/SideBar";
 import Pagination from "src/components/PaginationButton";
 import { Home, MapPin, Edit, Eye, PlusCircle, House } from "lucide-react";
 import api from "src/utils/Api";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const LandLordProperties = () => {
     const [properties, setProperties] = useState([]);
@@ -12,6 +12,7 @@ const LandLordProperties = () => {
     const [loading, setLoading] = useState(false);
     const limit = 9; // Make sure this matches your backend page size
     const navigate = useNavigate()
+    const location = useLocation()
 
     const fetchProperties = async (pageNumber = 1) => {
         setLoading(true);
@@ -28,14 +29,22 @@ const LandLordProperties = () => {
     };
 
     useEffect(() => {
+        // this activate the refresh
+        if (location.state?.refresh) {
+            fetchProperties();
+            location.state.refresh = false
+        } 
+    }, [location.state]);
+
+    useEffect(() => {
         fetchProperties();
-    }, []);
+    }, [])
 
     const handlePageChange = (newPage) => {
         fetchProperties(newPage);
     };
 
-    
+
 
     return (
         <div className="flex min-h-screen bg-gray-100">
@@ -49,8 +58,8 @@ const LandLordProperties = () => {
                         <p className="text-gray-600">Manage and track your property listings</p>
                     </div>
 
-                    <button 
-                        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow" 
+                    <button
+                        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow"
                         onClick={() => navigate('/landlord/properties/add')}
                     >
                         <PlusCircle className="w-5 h-5" />
@@ -103,14 +112,14 @@ const LandLordProperties = () => {
                                 {item.address}
                             </p>
                             <div className="flex items-center gap-3 mt-4">
-                                <button 
+                                <button
                                     className="flex items-center gap-1 px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-lg"
                                     onClick={() => navigate(`/landlord/properties/edit/${item.slug_name}`)}
                                 >
                                     <Edit className="w-4 h-4" />
                                     Edit
                                 </button>
-                                <button 
+                                <button
                                     className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white hover:bg-blue-700 rounded-lg"
                                     onClick={() => navigate(`/landlord/properties/${item.slug_name}`)}
                                 >

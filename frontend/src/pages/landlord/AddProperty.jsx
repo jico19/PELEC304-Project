@@ -46,6 +46,7 @@ const AddProperty = () => {
             const res = await api.post("room/", formData);
             console.log(res.data);
             success("Successfully uploaded a room.")
+            navigate(-1)
         } catch (err) {
             console.log(err);
             error("There's something wrong in uploading your property please try again.")
