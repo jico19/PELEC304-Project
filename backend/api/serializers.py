@@ -177,11 +177,17 @@ class PaymentHistorySerializer(serializers.ModelSerializer):
         return attrs
 
 class LandlordApplicationSerializer(serializers.ModelSerializer):
+    applicant_name = serializers.SerializerMethodField()
+
+    
     class Meta:
         model = models.LandlordApplication
-        fields = ['id', 'document', 'status', 'applied_at']
+        fields = ['id','application_id', 'document', 'status', 'applied_at', 'applicant_name']
         read_only_fields = ['status', 'applied_at',  'applicant']
     
+    
+    def get_applicant_name(self, obj):
+        return obj.applicant.username
     
     def validate(self, attrs):
         user = self.context['request'].user.pk

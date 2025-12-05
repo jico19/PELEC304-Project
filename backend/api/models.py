@@ -32,13 +32,8 @@ class CustomUser(AbstractUser):
     USER_ROLE_CHOICES = (
         ('Landlord', 'Landlord'),
         ('Tenant', 'Tenant'),
+        ('SuperAdmin', 'SuperAdmin'),
     )
-
-    '''
-        ROLE NOTES:
-        True it means landlord
-        False means Teanant
-    '''
 
     user_id = ShortUUIDField(length=5, max_length=30, prefix="id_",
                              alphabet="abcdefg1234", unique=True, editable=False)
@@ -234,6 +229,7 @@ Loop uploaded files → create ApplicationDocument per file.
 Admin sees all files under one application cleanly.
 '''
 
+
 class LandlordApplication(models.Model):
 
     APPLICATION_STATUS = (
@@ -241,10 +237,19 @@ class LandlordApplication(models.Model):
         ('Pending', 'Pending'),
         ('Rejected', 'Rejected'),
     )
+    application_id = ShortUUIDField(
+        length=5,
+        max_length=30,
+        prefix="APL_",
+        alphabet="abcdefg1234",
+        unique=True,
+        editable=False
+    )
 
     applicant = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     document = models.FileField(upload_to="landlord_docs/")
-    status = models.CharField(max_length=20, default="Pending", choices=APPLICATION_STATUS)
+    status = models.CharField(
+        max_length=20, default="Pending", choices=APPLICATION_STATUS)
     applied_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

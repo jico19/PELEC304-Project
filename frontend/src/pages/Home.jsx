@@ -47,6 +47,7 @@ const Home = () => {
 
         const timeout = setTimeout(() => {
             if (role === "Landlord") navigate("/landlord/dashboard");
+            else if (role === "SuperAdmin") navigate("/admin/dashboard");
             else if (role === "Tenant") navigate("/home");
 
             setRedirecting(false);

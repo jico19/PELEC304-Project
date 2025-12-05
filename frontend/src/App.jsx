@@ -23,6 +23,8 @@ import LandlordProfile from './pages/landlord/LandlordProfile'
 import AddProperty from './pages/landlord/AddProperty'
 import PropertyEdit from './pages/landlord/PropertyEdit'
 import PropertyView from './pages/landlord/ViewPorperty'
+import AdminDashboard from './pages/Admin/AdminDashboard'
+import AdminPropertyManagement from './pages/Admin/AdminPropertyManagement'
 
 function App() {
 
@@ -107,6 +109,16 @@ function App() {
           <Route path='/landlord/properties/:slug_name' element={
             <ProtectedRoutes>
               <PropertyView />
+            </ProtectedRoutes>
+          } />
+          <Route path='/admin/dashboard' element={
+            <ProtectedRoutes>
+              <AdminDashboard />
+            </ProtectedRoutes>
+          } />
+          <Route path='/admin/manage/properties' element={
+            <ProtectedRoutes>
+              <AdminPropertyManagement />
             </ProtectedRoutes>
           } />
         </Routes>

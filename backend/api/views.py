@@ -201,3 +201,28 @@ class LandlordRooms(views.APIView):
         paginated_rooms = paginator.paginate_queryset(your_properties, request)
         serializer = serializers.RoomSerializer(paginated_rooms, many=True, context={'request': request})
         return paginator.get_paginated_response(serializer.data)
+
+
+class SuperAdminDashboardView(views.APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self ,request):
+        total_user = models.CustomUser.objects.filter(role='Tenant').count()
+        total_landlord = models.CustomUser.objects.filter(role="Landlord").count()
+        pending_approvals = models.LandlordApplication.objects.filter(status="Pending").count()
+        total_reports = models.Reports.objects.all().count()
+        recent_activity = models.Notification.objects.all()
+        applications = models.LandlordApplication.objects.all()
+        
+        recent_activity_serializer = serializers.NotifcationSerializer(recent_activity, many=True)
+        applications_serializer = serializers.LandlordApplicationSerializer(applications, many=True)
+        
+        
+        return Response({
+            "total_user": total_user,
+            "total_landlords": total_landlord,
+            "pending_approvals": pending_approvals,
+            "subbmited_reports": total_reports,
+            "recent_reports": recent_activity_serializer.data,
+            "applicants": applications_serializer.data,
+        })
