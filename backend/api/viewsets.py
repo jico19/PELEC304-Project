@@ -139,8 +139,9 @@ class PaymentTransactionViewSet(viewsets.ModelViewSet):
 
 class LandlordApplicationViewSets(viewsets.ModelViewSet):
     serializer_class = serializers.LandlordApplicationSerializer
+    lookup_field = 'application_id'
     queryset = models.LandlordApplication.objects.all()
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     
     def perform_create(self, serializer):
         return serializer.save(applicant=self.request.user)

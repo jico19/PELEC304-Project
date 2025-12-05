@@ -9,7 +9,7 @@ import { MapPin, DollarSign, RefreshCw } from 'lucide-react'
 import Pagination from 'src/components/PaginationButton'
 
 const Recomendataions = () => {
-    const { location } = useLocation()
+    const { location, getLocation } = useLocation()
     const [radius, setRadius] = useState(5)
     const [budget, setBudget] = useState([1000, 5000])
     const [recomendedRooms, setRecomendedRooms] = useState([])
@@ -26,6 +26,7 @@ const Recomendataions = () => {
             const res = await axios.get(
                 `http://127.0.0.1:8000/api/rooms/?lat=${location.lat}&lon=${location.long}&radius=${radius}&min-budget=${budget[0]}&max-budget=${budget[1]}&page=${pageNumber}`
             )
+            console.log(res.data)
             setRecomendedRooms(res.data.results)
             setCount(res.data.count)
             setPage(pageNumber)
@@ -35,12 +36,13 @@ const Recomendataions = () => {
             setLoading(false)
         }
     }
-    
+
     const handleRefresh = () => {
         setRadius(5)
         setBudget([1000, 5000])
         fetchRooms(1)
     }
+
 
     useEffect(() => {
         if (!location) return
@@ -67,7 +69,6 @@ const Recomendataions = () => {
 
             <main className="flex-1 mt-16 sm:mt-24 px-4 sm:px-6 lg:px-8 py-10">
                 {/* header and controls here (same as before) */}
-
 
 
                 <header className="mb-8">
@@ -126,16 +127,51 @@ const Recomendataions = () => {
 
                 <h2 className="text-2xl font-semibold mb-4">Top Matches</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {loading
-                        ? Array.from({ length: limit }).map((_, i) => (
-                            <div key={i} className="animate-pulse flex flex-col bg-white rounded-xl shadow-md p-4 gap-2 border border-gray-200 h-72">
-                                <div className="bg-gray-300 h-36 w-full rounded-lg" />
-                                <div className="h-4 bg-gray-300 rounded w-3/4 mt-2" />
-                                <div className="h-3 bg-gray-300 rounded w-1/2 mt-1" />
-                                <div className="h-4 bg-gray-300 rounded w-1/4 mt-auto" />
-                            </div>
+                    {loading && !location ? (
+                        <div className="col-span-full flex flex-col items-center text-center bg-white shadow-lg rounded-xl p-8 border border-gray-200">
+
+                            <MapPin size={48} className="text-red-500 mb-3" />
+
+                            <h1 className="text-2xl font-bold text-gray-800 mb-2">
+                                Location Services Disabled
+                            </h1>
+
+                            <p className="text-gray-600 max-w-lg">
+                                We can’t find rooms near you because your device’s location is turned off.
+                                Please enable it to use Nearby Recommendations.
+                            </p>
+
+                            <ul className="text-left text-gray-700 mt-4 space-y-1">
+                                <li className="flex items-center gap-2">
+                                    <MapPin size={16} className="text-blue-600" />
+                                    Turn on your computer or mobile GPS
+                                </li>
+                                <li className="flex items-center gap-2">
+                                    <MapPin size={16} className="text-blue-600" />
+                                    Allow location access in your browser
+                                </li>
+                                <li className="flex items-center gap-2">
+                                    <MapPin size={16} className="text-blue-600" />
+                                    Click the button below to detect your location again
+                                </li>
+                            </ul>
+
+                            <button
+                                onClick={() => getLocation()}
+                                className="mt-6 flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                            >
+                                <MapPin size={18} /> Turn On Location
+                            </button>
+                        </div>
+                    ) : loading ? (
+                        Array.from({ length: limit }).map((_, i) => (
+                            <div
+                                key={i}
+                                className="animate-pulse bg-white rounded-xl shadow-md p-4 h-72 border border-gray-200"
+                            />
                         ))
-                        : recomendedRooms.map(data => (
+                    ) : (
+                        recomendedRooms.map(data => (
                             <PropertyCards
                                 key={data.room_id}
                                 image={data.room_picture}
@@ -148,7 +184,7 @@ const Recomendataions = () => {
                                 handler={() => RentNowHandler(data.slug_name)}
                             />
                         ))
-                    }
+                    )}
                 </div>
 
                 {/* pagination */}

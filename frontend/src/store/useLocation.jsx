@@ -21,8 +21,7 @@ const useLocation = create(
                             lat: pos.coords.latitude,
                             long: pos.coords.longitude,
                         };
-
-
+                        
                         set({
                             location: coords,
                             loading: false,

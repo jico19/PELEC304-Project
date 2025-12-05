@@ -226,3 +226,17 @@ class SuperAdminDashboardView(views.APIView):
             "recent_reports": recent_activity_serializer.data,
             "applicants": applications_serializer.data,
         })
+
+class GetApplicationStatus(views.APIView):
+    
+    
+    def get(self, request):
+        if models.LandlordApplication.objects.filter(applicant=self.request.user).exists():
+            status = models.LandlordApplication.objects.filter(applicant=self.request.user).values('status')
+            return Response({
+                status
+            })
+        else:
+            return Response({
+                "status": None
+            })

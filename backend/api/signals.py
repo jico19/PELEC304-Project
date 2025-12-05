@@ -1,6 +1,7 @@
 from django.db.models.signals import (
     post_save,
-    post_delete
+    post_delete,
+    pre_save
 )
 from django.dispatch import receiver
 from . import models
@@ -105,3 +106,32 @@ def send_notifcation_that_tenant_has_paid(sender, instance, created, **kwargs):
             sender=instance.room.owner,
             content=f"{instance.renter.get_full_name()} has paid its rent for {instance.amount}₱"
         )
+
+
+@receiver(pre_save, sender=models.LandlordApplication)
+def before_save_application(sender, instance, **kwargs):
+    if instance.pk:
+        old = sender.objects.get(pk=instance.pk)
+        instance._old_status = old.status
+    else:
+        instance._old_status = None
+
+
+@receiver(post_save, sender=models.LandlordApplication)
+def change_roles_and_cleanup(sender, instance, created, **kwargs):
+    user = instance.applicant
+
+    # Determine status change
+    old_status = getattr(instance, "_old_status", None)
+    new_status = instance.status
+
+    # Fire only when the status has *just* changed to Approved
+    if new_status == "Approved" and old_status != "Approved":
+        
+        # Update role only if needed
+        if user.role != "Landlord":
+            user.role = "Landlord"
+            user.save()
+
+        # Delete active rentals where user is a tenant
+        models.ActiveRent.objects.filter(tenant=user).delete()

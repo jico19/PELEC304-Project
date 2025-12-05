@@ -34,7 +34,8 @@ const Home = () => {
 
     useEffect(() => {
         const initRole = async () => {
-            if (!role) await fetchRole();
+            await fetchRole();
+            console.log("tite")
         };
         initRole();
     }, [fetchRole, role]);
