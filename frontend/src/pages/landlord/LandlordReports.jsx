@@ -77,20 +77,20 @@ const LandLordReport = () => {
                                                 {data?.room_name || "Unknown Property"}
                                             </td>
 
-<td
-    className="p-4 text-gray-600 max-w-xs truncate"
-    title={data?.content}
->
-    {data?.content || "No description provided"}
-</td>
+                                            <td
+                                                className="p-4 text-gray-600 max-w-xs truncate"
+                                                title={data?.content}
+                                            >
+                                                {data?.content || "No description provided"}
+                                            </td>
 
                                             <td className="p-4">
                                                 <span
                                                     className={`px-3 py-1 rounded-full text-xs font-semibold ${data?.status === "Pending"
-                                                            ? "bg-yellow-100 text-yellow-700"
-                                                            : data?.status === "Resolved"
-                                                                ? "bg-green-100 text-green-700"
-                                                                : "bg-gray-200 text-gray-700"
+                                                        ? "bg-yellow-100 text-yellow-700"
+                                                        : data?.status === "Resolved"
+                                                            ? "bg-green-100 text-green-700"
+                                                            : "bg-gray-200 text-gray-700"
                                                         }`}
                                                 >
                                                     {data?.status || "Unknown"}

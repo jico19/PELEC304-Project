@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import api from "src/utils/Api";
 import { useToast } from "src/store/useToast";
 import { useProfile } from "src/store/useProfile";
+import { useRole } from "src/store/useRole";
 
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -11,8 +12,14 @@ const Sidebar = () => {
     const { success, error } = useToast()
     const [isLoading, setLoading] = useState(false)
     const { profile, fetchUserProfile } = useProfile()
+    const { role } = useRole()
 
-    const menuItems = [
+    const menuItems = role == 'SuperAdmin' ? [
+        { name: "Dashboard", icon: <LayoutDashboard className="w-5 h-5" />, link: "/admin/dashboard" },
+        { name: "Properties", icon: <House className="w-5 h-5" />, link: "/admin/manage/properties" },
+        { name: "Reports", icon: <Flag className="w-5 h-5" />, link: "/landlord/dashboard" },
+        { name: "Profile", icon: <User className="w-5 h-5" />, link: `/landlord/dashboard` },
+    ] : [
         { name: "Dashboard", icon: <LayoutDashboard className="w-5 h-5" />, link: "/landlord/dashboard" },
         { name: "Properties", icon: <House className="w-5 h-5" />, link: "/landlord/properties" },
         { name: "Reports", icon: <Flag className="w-5 h-5" />, link: "/landlord/reports" },
@@ -72,7 +79,7 @@ const Sidebar = () => {
                 {/* Sidebar Desktop */}
                 <div className="hidden lg:flex lg:flex-col lg:w-64 bg-indigo-600 text-white">
                     <div className="p-6 text-2xl font-bold border-b border-indigo-500">
-                        Landlord Dashboard
+                        {role == "SuperAdmin" ? "Admin" : "Landlord"} Panel
                     </div>
                     <nav className="flex-1 mt-6">
                         {menuItems.map((item) => (
