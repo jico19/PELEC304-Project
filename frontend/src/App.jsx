@@ -25,6 +25,8 @@ import PropertyEdit from './pages/landlord/PropertyEdit'
 import PropertyView from './pages/landlord/ViewPorperty'
 import AdminDashboard from './pages/Admin/AdminDashboard'
 import AdminPropertyManagement from './pages/Admin/AdminPropertyManagement'
+import ViewApplications from './pages/Admin/ViewApplications'
+import WorkInProgress from './pages/WorkInProgress'
 
 function App() {
 
@@ -38,6 +40,7 @@ function App() {
           <Route path="/signup" element={<Register />} />
           <Route path="/reset/password" element={<AskEmailForPassword />} />
           <Route path="/reset/password/confirm" element={<ResetPassword />} />
+          <Route path="/wip" element={<WorkInProgress/>} />
           <Route path='/home' element={
             <ProtectedRoutes>
               <Home />
@@ -119,6 +122,11 @@ function App() {
           <Route path='/admin/manage/properties' element={
             <ProtectedRoutes>
               <AdminPropertyManagement />
+            </ProtectedRoutes>
+          } />
+          <Route path='/admin/view/applcation/:application_id' element={
+            <ProtectedRoutes>
+              <ViewApplications />
             </ProtectedRoutes>
           } />
         </Routes>

@@ -1,16 +1,45 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import Sidebar from "src/components/SideBar"
 import { useAdminDashboard } from "src/store/useAdminDashboard"
 import { Eye, Check, X } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import api from "src/utils/Api"
+
 
 const AdminPropertyManagement = () => {
     const { dashboardData, fetchAdminDashboardData } = useAdminDashboard()
+    const navigate = useNavigate()
 
     useEffect(() => {
         fetchAdminDashboardData()
     }, [])
 
     const applicants = dashboardData?.applicants || []
+
+    const approveApplicationHandler = async (application_id) => {
+        try {
+            const res = await api.patch(`application/${application_id}/`, {
+                "status": "Approved"
+            })
+            console.log(res.data)
+            fetchAdminDashboardData(); // refresh data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const rejectApplicationHandler = async (application_id) => {
+        try {
+            const res = await api.patch(`application/${application_id}/`, {
+                "status": "Rejected"
+            })
+            console.log(res.data)
+            fetchAdminDashboardData(); // refresh data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 
     return (
         <div className="flex min-h-screen bg-gray-100">
@@ -25,6 +54,7 @@ const AdminPropertyManagement = () => {
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+
                     <div className="overflow-x-auto w-full">
                         <table className="w-full min-w-max">
                             <thead className="bg-gray-100 text-gray-700 text-sm uppercase font-semibold">
@@ -52,13 +82,12 @@ const AdminPropertyManagement = () => {
 
                                             <td className="p-4">
                                                 <span
-                                                    className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                                                        a.status === "Pending"
+                                                    className={`px-3 py-1 rounded-full text-xs font-semibold ${a.status === "Pending"
                                                             ? "bg-yellow-100 text-yellow-700"
                                                             : a.status === "Approved"
-                                                            ? "bg-green-100 text-green-700"
-                                                            : "bg-red-100 text-red-700"
-                                                    }`}
+                                                                ? "bg-green-100 text-green-700"
+                                                                : "bg-red-100 text-red-700"
+                                                        }`}
                                                 >
                                                     {a.status}
                                                 </span>
@@ -69,17 +98,26 @@ const AdminPropertyManagement = () => {
                                             </td>
 
                                             <td className="p-4 flex items-center gap-4">
-                                                <button className="flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                                                <button
+                                                    className="flex items-center gap-1 text-blue-600 hover:text-blue-800"
+                                                    onClick={() => navigate('/wip')}
+                                                >
                                                     <Eye size={18} />
                                                     <span>View</span>
                                                 </button>
 
-                                                <button className="flex items-center gap-1 text-green-600 hover:text-green-800">
+                                                <button
+                                                    className="flex items-center gap-1 text-green-600 hover:text-green-800"
+                                                    onClick={() => approveApplicationHandler(a.application_id)}
+                                                >
                                                     <Check size={18} />
                                                     <span>Approve</span>
                                                 </button>
 
-                                                <button className="flex items-center gap-1 text-red-600 hover:text-red-800">
+                                                <button
+                                                    className="flex items-center gap-1 text-red-600 hover:text-red-800"
+                                                    onClick={() => rejectApplicationHandler(a.application_id)}
+                                                >
                                                     <X size={18} />
                                                     <span>Reject</span>
                                                 </button>

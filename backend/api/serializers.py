@@ -183,7 +183,7 @@ class LandlordApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.LandlordApplication
         fields = ['id','application_id', 'document', 'status', 'applied_at', 'applicant_name']
-        read_only_fields = ['status', 'applied_at',  'applicant']
+        read_only_fields = ['applied_at',  'applicant']
     
     
     def get_applicant_name(self, obj):

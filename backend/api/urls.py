@@ -27,6 +27,7 @@ urlpatterns = [
     path('get-role/', views.GetRoles.as_view(), name="user_role"),
     path('landlord/room/', views.LandlordRooms.as_view(), name="landlord"),
     path('super-admin/data/', views.SuperAdminDashboardView.as_view(), name="admin_dashboard_data"),
+    path('application/status/', views.GetApplicationStatus.as_view(), name="get_application_status"),
 
     # user endpoints
     path('', include(router.urls))
